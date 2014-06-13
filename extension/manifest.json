@@ -1,0 +1,15 @@
+{
+  "name": "LauraKeyLogger-Extension",
+  "description": "This app log each input of the user for Internet Experiments. The extension comunicates with with chrome web app.",
+  "version": "0.5",
+  "author": "Laura Lugli, Matteo Ragni",
+  "manifest_version": 2,
+  "content_scripts": [{
+      "matches": ["*://*/*"],
+      "js": ["injection.js"]
+  }],
+  "web_accessible_resources": ["query.js"],
+  "minimum_chrome_version": "31",
+  "permissions": [ "*://*/" ],
+  "icons": { "16": "icon-16.png", "128": "icon-128.png" }
+}
