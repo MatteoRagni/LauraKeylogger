@@ -1,15 +1,74 @@
 <html>
 
 <head>
+
+     <link rel="shortcut icon" type="image/x-icon" href="icons/icon16.png" />
+
+    <!-- Inclusion of external resources -->
+    <!-- jQuery -->
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <!-- Bootstrap -->   
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <script src="status.js"></script>
+    <link rel="stylesheet" href="status.css">
+
 </head>
 
 <body>
-    <div id="content" width="100%">
-    
+    <div id="content" class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Capturing Status</h3>
+        </div>
+        <div class="panel-body">
+            <input type="button" class="btn btn-danger" value="Not Running" id="statusSwitch" onclick="xorStatus()">
+        </div>
+        <div class="panel-heading">
+            <h3 class="panel-title">Real Time capturing</h3>
+        </div>
+        <div class="panel-body">
+    	<table class="table table-striped" id="results-table">
+    		<!-- Time -->
+    		<tr class="cls-tr-time info"><td colspan="2">Time</td></tr>
+    		<tr class="cls-tr-time"><td>Epoch</td><td class="data" id="timeEpoch">timeEpoch</td></tr>
+    		<tr class="cls-tr-time"><td>Locale</td><td class="data" id="timeLocale">timeLocale</td></tr>
+            <!-- page information -->
+            <tr class="cls-tr-title info"><td colspan="2">Title</td></tr>
+            <tr class="cls-tr-title"><td class="data" colspan="2" id="idTitle">idTitle</td></tr>
+    		<!-- Mouse -->
+    		<tr class="cls-tr-mouse info"><td colspan="2">Mouse</td></tr>
+    		<tr class="cls-tr-mouse"><td>X</td><td class="data" id="mouseX">mouseX</td></tr>
+    		<tr class="cls-tr-mouse"><td>Y</td><td class="data" id="mouseY">mouseY</td></tr>
+    		<tr class="cls-tr-mouse"><td>Event</td><td class="data" id="mouseEv">mouseEv</td></tr>
+    		<tr class="cls-tr-mouse"><td>Button</td><td class="data" id="mouseBtn">mouseBtn</td></tr>
+            <!-- Keyboard -->
+            <tr class="cls-tr-kbrd info"><td colspan="2">Keyboard</td></tr>
+            <tr class="cls-tr-kbrd"><td>Key</td><td class="data" id="kbdKey">kbdKey</td></tr>
+            <tr class="cls-tr-kbrd">
+                <td>Modifiers</td>
+                <td class="data">
+                    <span id="kbdCtrl" class="label label-info">[Ctrl]</span>&nbsp;
+                    <span id="kbdAlt" class="label label-info">[Alt]</span>&nbsp;
+                    <span id="kbdShift" class="label label-info">[Shift]</span>&nbsp;
+                    <span id="kbdMeta" class="label label-info">[Win]</span>
+                </td>
+            </tr>
+            <tr class="cls-tr-kbrd"><td>Combination</td><td class="data" id="kbdComb">kbdComb</td></tr>
+    	</table>
+    	</div>
+        
+        <div class="panel-heading">
+            <h3 class="panel-title">Real Time capturing</h3>
+        </div>
+        <div class="panel-body">
+            <textarea class="result-xml" id="logging"></textarea>
+            <input type="button" class="btn btn-success" value="Save">
+            <input type="button" class="btn btn-info" value="Export in SPSS-Xml ready import">
+        </div>
     </div>
-    <div width="100%" height="80px">
-        <textarea id="logging" style="width:100%; height:160px;"></textarea>
-    </div>
+    <span class="credits">Laura Lugli, Matteo Ragni - 2014 - <a href="https://github.com/MatteoRagni/LauraKeylogger">Repo Github</a><span>
 </body>
 
 </html>

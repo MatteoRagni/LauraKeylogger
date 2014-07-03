@@ -1,17 +1,3 @@
-var __config = {
-    dispatchID: '__LauraKeyLoggerExtension',
-    
-    __debug__: true
-};
-
-// ***** do not edit below this line ****** //
-
-// Applcation IDs, used for message passing
-var __appID = {
-    app: "opfpjfjicecfggophkmacanbphmfigja",
-    ext: "cciecdfdfbhkbheicoebjblaehbaifgb"
-}
-
 // Debugging function. Set to false __config.__debug__ to 
 // avoid messages in console
 function __printDebug(message) {
