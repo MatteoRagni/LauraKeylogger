@@ -1,7 +1,50 @@
 // Status.js
-
- // This variable is used by the app to understand if capturing is running or not
+// This variable is used by the app to understand if capturing is running or not
 var CAPTURING = false;
+
+
+
+
+// Definitions only for debugging and test
+var __debug__ = true;
+
+/* DO NOT EDIT BELOW THIS LINE */
+
+if (__debug__) {
+
+    function __print(mess) {
+        console.log("[DEBUG] :: " + mess);
+    }
+
+    var __testing_obj = {
+        time: {
+            epoch: "epoch_time",
+            localeDate: "locale_date",
+            localeTime: "locale_time"
+        },
+
+        mouse: {
+            x: "mouse_x",
+            y: "mouse_y",
+            evnt: "mouse_event",
+            button: "mouse_button"
+        },
+
+        keyboard: {
+            string: "kbd_full_combination",
+            key: "kbd_key",
+            modifiers: "ctrl meta",
+            ctrl: true,
+            meta: true,
+            alt: false,
+            shift: false,
+            keyCode: "0x100"
+        }
+    }
+
+} else {
+    function __debug(mess){}; 
+}
 
 // this function handle the capturing status (capturing status refer only to saving data in the textarea!)
 function xorStatus() {
@@ -38,26 +81,45 @@ function populate(obj) {
         $("#timeLocale").html(obj.time.localeTime + " - " + obj.time.localeDate);
         // Writing title of the capture or hide title rows
         if (obj.title) {
-        	$(".cls-tr-title").prop("hidden","false");
+        	$(".cls-tr-title").show();
         	$("#idTitle").html(obj.title);
         } else {
-        	$(".cls-tr-title").prop("hidden","true");
+        	$(".cls-tr-title").hide();
         }
         // Writing elements of mouse events if present
         if (obj.mouse) {
-        	$(".cls-tr-mouse").prop("hidden","false");
+        	$(".cls-tr-mouse").show();
         	$("#mouseX").html(obj.mouse.x);
-        	$("#mouseY").html(obj.mouse.x);
+        	$("#mouseY").html(obj.mouse.y);
         	$("#mouseEv").html(obj.mouse.evnt);
         	$("#mouseBtn").html(obj.mouse.button);
         } else {
-        	$(".cls-tr-mouse").prop("hidden","true");
+        	$(".cls-tr-mouse").hide();
         }
         if (obj.keyboard) {
-        	$(".cls-tr-kbrd").prop("hidden","false");
-        	$("#kbdKey").html(obj.keyboard.string + " - " + obj.keyboard.keyCode);
+        	$(".cls-tr-kbrd").show();
+        	$("#kbdKey").html(obj.keyboard.key + " - " + obj.keyboard.keyCode);
         	modifierStatus("#kbdCtrl", obj.keyboard.ctrl);
+            modifierStatus("#kbdAlt",obj.keyboard.alt);
+            modifierStatus("#kbdShift",obj.keyboard.shift);
+            modifierStatus("#kbdMeta",obj.keyboard.meta);
+            $("#kbdComb").html(obj.keyboard.string);
+        } else {
+            $(".cls-tr-kbrd").hide();
         }
     }
 }
 
+/*******************************/
+/* INTERACTIONS                */
+/*******************************/
+
+$(document).ready( function() {
+    
+    // Click function for statusSwitch
+    $("#statusSwitch").click(function() {
+        __print("clicked event!");
+        xorStatus();
+    });
+
+});

