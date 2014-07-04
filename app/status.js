@@ -19,6 +19,17 @@ function xorStatus() {
     }
 }
 
+// Used to change the color of span object that identify modifiers
+function modifierStatus(itemId, cond) {
+	if (cond) {
+		$(itemId).removeClass();
+		$(itemId).addClass("label label-success");
+	} else {
+		$(itemId).removeClass();
+		$(itemId).addClass("label label-info");
+	}
+}
+
 // This script is used to populate objects in table. jQuery id selector used!
 function populate(obj) {
     if (CAPTURING) {
@@ -32,5 +43,21 @@ function populate(obj) {
         } else {
         	$(".cls-tr-title").prop("hidden","true");
         }
+        // Writing elements of mouse events if present
+        if (obj.mouse) {
+        	$(".cls-tr-mouse").prop("hidden","false");
+        	$("#mouseX").html(obj.mouse.x);
+        	$("#mouseY").html(obj.mouse.x);
+        	$("#mouseEv").html(obj.mouse.evnt);
+        	$("#mouseBtn").html(obj.mouse.button);
+        } else {
+        	$(".cls-tr-mouse").prop("hidden","true");
+        }
+        if (obj.keyboard) {
+        	$(".cls-tr-kbrd").prop("hidden","false");
+        	$("#kbdKey").html(obj.keyboard.string + " - " + obj.keyboard.keyCode);
+        	modifierStatus("#kbdCtrl", obj.keyboard.ctrl);
+        }
     }
 }
+
