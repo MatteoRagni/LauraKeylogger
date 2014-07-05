@@ -8,6 +8,9 @@ chrome.app.runtime.onLaunched.addListener(function() {
 
 var Keylogger = function() {
     
+    // In this local file will be saved all collected data
+    this.file = new __File("events");
+
     // The object is created with null variables
     this.time = { epoch: 0, obj: new Date(0) };
     this.title = null;
@@ -20,6 +23,9 @@ var Keylogger = function() {
         if (content.config.opt_title) { this.title = content.title; } else { this.title = null; }
         if (content.config.opt_mouse) { this.mouse = content.mouse; } else { this.mouse = null; }
         if (content.config.opt_keyboard) { this.keyboard = content.keyboard; } else { this.keyboard = null; }
+
+        // Add an element to the file
+        this.file.push(this.get());
     };
     
     // This function returns the whole object
@@ -85,34 +91,63 @@ var Keylogger = function() {
         
         console.log(log);
     }
-    
-    // Return a stringed version of the event... will be implemented better the next days...
-    this.logCSV = function() {
-        var ret = "";
-        ret += this.time.epoch + '\t';
+
+    // This function convert the whole object saved in an xml string
+    this.getXML() {
+
+        var data = this.file.get();
+
+        var xml = "<events>\n";
+        for (var i = 0; i < data.events.lenght; i++) {
+            var event = data.events[i];
+            
+            // Timing informations
+            var xmlev = "<event>" + "\n" + 
+                "  <time>" + "\n" +
+                "    <epoch>" + event.time.epoch + "</epoch>" + "\n" +
+                "    <locale>" + event.time.localeTime + " - " event.time.localeDate + "</locale>" + "\n" +
+                "  </time>" + "\n";
+            
+            // Page informations
+            if (event.title) {
+                xmlev += "  <title>" + event.title + "</title>" + "\n";
+            }    
+
+            // Mouse events
+            if (event.mouse) {
+                xmlev += "  <mouse>" + "\n" +
+                         "    <x>" + event.mouse.x + "</x>" + "\n" +
+                         "    <y>" + event.mouse.y + "</y>" + "\n" +
+                         "    <button>" + event.mouse.button + "</button>" + "\n" +
+                         "    <type>" + event.mouse.evnt + "</type>" + "\n" +
+                         "  </mouse>" + "\n";
+            }
+
+            // Keyboard events
+            if (event.keyboard) {
+                xmlev += "  <keyboard>"  + "\n" + 
+                         "    <keycode>" + event.keyboard.keycode + "<keycode>"  + "\n" +
+                         "    <key>" + event.keyboard.key + "</key>" + "\n" +
+                         "    <ctrl>" + event.keyboard.ctrl + "</ctrl>" + "\n" +
+                         "    <alt>" + event.keyboard.alt + "</alt>" + "\n" +
+                         "    <shift>" + event.keyboard.shift + "</shift>" + "\n" +
+                         "    <meta>" + event.keyboard.meta + "</meta>" + "\n" +
+                         "    <combination>" + event.keyboard.string + "</combination>" + "\n" +
+                xmlev += "  </keyboard>"
+
+            }
+
+        }
+        xml += "</events>"
     }
-    
-    this.logXML = function() {
-        var xml = "";
-        xml += '<keylog>\n';
-            xml += '  <time>' + this.time.epoch + '</time>\n';
-            if (this.title != null) {
-                xml += '  <title>' + this.title + '</title>\n';
-            }
-            if (this.mouse != null) {
-                xml += '  <mouse><x>' + this.mouse.x +'</x><y>' + this.mouse.y + '</y><event>' + this.mouse.evnt + '</event><btn>' + this.mouse.button + '</btn></mouse>\n';    
-            }
-            if (this.keyboard != null) {
-                xml += '  <keyb ctrl="'+ (this.keyboard.ctrl ? "true" : "false") +'" alt="'+ (this.keyboard.alt ? "true" : "false") +'" shift="'+ (this.keyboard.shift ? "true" : "false") +'" meta="'+ (this.keyboard.meta ? "true" : "false") +'">' + this.keyboard.key + '</keyb>\n'
-            }
-        xml += '</keylog>\n';
-        return xml;
+
+    this.getXML_SPSS() {
+
     }
     
     this.updateWindow = function() {
-        //(chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("content").innerHTML = this.logHTML();
         (chrome.app.window.get(__config.opt_window.id)).contentWindow.populate(this.get());
-        (chrome.app.window.get(__config.opt_window.id)).contentWindow.document.getElementById("logging").value += this.logXML();
+
     }
 }
 

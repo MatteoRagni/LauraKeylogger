@@ -40,5 +40,3 @@ var __File = function(name) {
 		return chrome.storage.local[this.name];
 	}
 }
-
-// Handle the JS object and transforms it in a XML
