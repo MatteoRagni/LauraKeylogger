@@ -118,8 +118,15 @@ $(document).ready( function() {
     
     // Click function for statusSwitch
     $("#statusSwitch").click(function() {
-        __print("clicked event!");
+        __print("clicked event! :: #statusSwitch");
         xorStatus();
     });
 
+    // Click function for Show and Save (showInXML)
+    $("#showInXML").click(function() {
+        __print("clicked event! :: #showInXML");
+        chrome.runtime.sendMessage({protocol:"show", content: "xml_show"});
+    });
+
 });
+

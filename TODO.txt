@@ -1,4 +1,2 @@
-* la posizione del mouse sulla pagina non è corretto quando c'è il throw di un evento non mousemove
-* bisogna definire un collegamento tra la extension e la app
-* sistemare la stringe che viene messa in output quando non si preme nessun tasto della tastiera
+* check saving in local storage
 * implementare un messaggio di risposta nelle funzioni di connessioni

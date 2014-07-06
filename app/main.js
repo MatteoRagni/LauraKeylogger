@@ -17,6 +17,9 @@ var Keylogger = function() {
     this.mouse = null;
     this.keyboard = null;
     
+    // Select if log in console or not
+    this.loginconsole = false;
+
     // This function is called with the content of the message from the extension
     this.update = function(content) {
         this.time = { epoch: content.time, obj: new Date(content.time) };
@@ -71,42 +74,43 @@ var Keylogger = function() {
     // This function logs to the console the content of the object
     // this function was written only for debugging purpose
     this.consoleLog = function() {
-        var log = '\n';
-        
-        // Logging time
-        log += "Time: " + this.time.obj.toLocaleString() + " [" + this.time.epoch + "]" + '\n';
-        
-        // if defined, logging title
-        if (this.title) { log += "Title: " + this.title + '\n';}
-        if (this.mouse) {
-            log += "Mouse:" + '\n';
-            log += '\t' + "X: " + this.mouse.x + '\n';
-            log += '\t' + "Y:" + this.mouse.y + '\n';
-            log += '\t' + "Event: " + this.mouse.evnt + '\n';
-            log += '\t' + "Button: " + this.mouse.button + '\n';
+        if (this.loginconsole) {
+            var log = '\n';
+            
+            // Logging time
+            log += "Time: " + this.time.obj.toLocaleString() + " [" + this.time.epoch + "]" + '\n';
+            
+            // if defined, logging title
+            if (this.title) { log += "Title: " + this.title + '\n';}
+            if (this.mouse) {
+                log += "Mouse:" + '\n';
+                log += '\t' + "X: " + this.mouse.x + '\n';
+                log += '\t' + "Y:" + this.mouse.y + '\n';
+                log += '\t' + "Event: " + this.mouse.evnt + '\n';
+                log += '\t' + "Button: " + this.mouse.button + '\n';
+            }
+            if (this.keyboard) {
+                log += "Keyboard:" + this.keyboard.string + '\n';
+            }
+            console.log(log);
         }
-        if (this.keyboard) {
-            log += "Keyboard:" + this.keyboard.string + '\n';
-        }
-        
-        console.log(log);
     }
 
     // This function convert the whole object saved in an xml string
-    this.getXML() {
+    this.getXML = function() {
 
         var data = this.file.get();
 
         var xml = "<events>\n";
-        for (var i = 0; i < data.events.lenght; i++) {
+        for (var i = 0; i < data.events.length; i++) {
             var event = data.events[i];
             
             // Timing informations
-            var xmlev = "<event>" + "\n" + 
-                "  <time>" + "\n" +
-                "    <epoch>" + event.time.epoch + "</epoch>" + "\n" +
-                "    <locale>" + event.time.localeTime + " - " event.time.localeDate + "</locale>" + "\n" +
-                "  </time>" + "\n";
+            var xmlev = "  <event>" + "\n" + 
+                "    <time>" + "\n" +
+                "      <epoch>" + event.time.epoch + "</epoch>" + "\n" +
+                "      <locale>" + event.time.localeTime + " - " + event.time.localeDate + "</locale>" + "\n" +
+                "    </time>" + "\n";
             
             // Page informations
             if (event.title) {
@@ -115,39 +119,43 @@ var Keylogger = function() {
 
             // Mouse events
             if (event.mouse) {
-                xmlev += "  <mouse>" + "\n" +
-                         "    <x>" + event.mouse.x + "</x>" + "\n" +
-                         "    <y>" + event.mouse.y + "</y>" + "\n" +
-                         "    <button>" + event.mouse.button + "</button>" + "\n" +
-                         "    <type>" + event.mouse.evnt + "</type>" + "\n" +
-                         "  </mouse>" + "\n";
+                xmlev += "    <mouse>" + "\n" +
+                         "      <x>" + event.mouse.x + "</x>" + "\n" +
+                         "      <y>" + event.mouse.y + "</y>" + "\n" +
+                         "      <button>" + event.mouse.button + "</button>" + "\n" +
+                         "      <type>" + event.mouse.evnt + "</type>" + "\n" +
+                         "    </mouse>" + "\n";
             }
 
             // Keyboard events
             if (event.keyboard) {
-                xmlev += "  <keyboard>"  + "\n" + 
-                         "    <keycode>" + event.keyboard.keycode + "<keycode>"  + "\n" +
-                         "    <key>" + event.keyboard.key + "</key>" + "\n" +
-                         "    <ctrl>" + event.keyboard.ctrl + "</ctrl>" + "\n" +
-                         "    <alt>" + event.keyboard.alt + "</alt>" + "\n" +
-                         "    <shift>" + event.keyboard.shift + "</shift>" + "\n" +
-                         "    <meta>" + event.keyboard.meta + "</meta>" + "\n" +
-                         "    <combination>" + event.keyboard.string + "</combination>" + "\n" +
-                xmlev += "  </keyboard>"
+                xmlev += "    <keyboard>"  + "\n" + 
+                         "      <keycode>" + event.keyboard.keycode + "<keycode>"  + "\n" +
+                         "      <key>" + event.keyboard.key + "</key>" + "\n" +
+                         "      <ctrl>" + event.keyboard.ctrl + "</ctrl>" + "\n" +
+                         "      <alt>" + event.keyboard.alt + "</alt>" + "\n" +
+                         "      <shift>" + event.keyboard.shift + "</shift>" + "\n" +
+                         "      <meta>" + event.keyboard.meta + "</meta>" + "\n" +
+                         "      <combination>" + event.keyboard.string + "</combination>" + "\n" +
+                         "    </keyboard>" + "\n";
 
             }
+            xmlev += "  </event>";
+
+            xml += xmlev;
 
         }
         xml += "</events>"
+        return xml;
     }
 
-    this.getXML_SPSS() {
-
+    // This function will generate an spss consistent xml file
+    this.getXML_SPSS = function() {
+        //TODO
     }
     
     this.updateWindow = function() {
         (chrome.app.window.get(__config.opt_window.id)).contentWindow.populate(this.get());
-
     }
 }
 
@@ -172,6 +180,29 @@ function connectionMessage(msg) {
         keylog.consoleLog();
         keylog.updateWindow();
     }
+
+    // implementation of protocol show
+    if (msg.protocol === "show") {
+        switch (msg.content) {
+            case "xml_show": // Open the output window
+                if (!(chrome.app.window.get(__config.out_window.id))) {
+                   chrome.app.window.create('content.html', __config.out_window);   
+                }
+                break;
+            case "xml_std": // write xml in output window
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML();
+            break;
+            case "xml_spss": // write xml in output window
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("XML SPSS not ready yet");
+            break;
+            case "json": // write xml in output window
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("JSON not ready yet");
+            break;
+            case "csv": // write xml in output window
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("CSV not ready yet");
+            break;
+        }
+    }
     
 }
 
@@ -185,6 +216,11 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
     port.onDisconnect.addListener(function() {
         port = null;
     });
+});
+
+chrome.runtime.onMessage.addListener(function(msg) {
+    //__printDebug("message listener called" + JSON.stringify(msg));
+    connectionMessage(msg);
 });
 
 
