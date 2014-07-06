@@ -101,7 +101,7 @@ var Keylogger = function() {
 
         var data = this.file.get();
 
-        var xml = "<events>\n";
+        var xml = "<?xml version='1.0'?>" + "\n" + "<events>" + "\n";
         for (var i = 0; i < data.events.length; i++) {
             var event = data.events[i];
             
@@ -140,7 +140,7 @@ var Keylogger = function() {
                          "    </keyboard>" + "\n";
 
             }
-            xmlev += "  </event>";
+            xmlev += "  </event>" + "\n";
 
             xml += xmlev;
 
@@ -151,7 +151,19 @@ var Keylogger = function() {
 
     // This function will generate an spss consistent xml file
     this.getXML_SPSS = function() {
-        //TODO
+        
+        var data = this.file.get();
+        var n = "\n";
+
+        var xml = "<spssfile>" + n + 
+                  "  <variable>" + n +
+                  "    "
+
+
+    }
+
+    this.get_cvs = function() {
+
     }
     
     this.updateWindow = function() {

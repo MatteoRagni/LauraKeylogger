@@ -5,12 +5,12 @@ var __config = {
         id: '__LauraKeyloggerWindow',
         bounds: {
             width: 400,
-            height: 800,
+            height: 722,
             left: 10,
             top: 10
         },
         minWidth: 400,
-        minHeight: 600
+        minHeight: 722
     },
 
     // Output window options
@@ -18,12 +18,12 @@ var __config = {
         id: '__LauraKeyloggerOutput',
         bounds: {
             width: 600,
-            height: 600,
+            height: 550,
             left: 10,
             top: 10
         },
         minWidth: 600,
-        minHeight: 600
+        minHeight: 550
     },
     
     // Debug option
