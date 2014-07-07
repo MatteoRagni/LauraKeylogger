@@ -4,7 +4,7 @@ This project is a collection of `chrome-extension` and `chrome-application` that
 
 ## Logging structure
 
-``` Javascript
+```
 
 event : {
 	time : {
@@ -42,10 +42,19 @@ event : {
    * go to `chrome://extension`
    * select **Deveoper Mode**
    * click on **Load unpacked extension...**
-   * select the folder: `$LauraKeylogger/app`
-   * select the folder: `$LauraKeylogger/extension`
- 3. Copy the `id` value assigned at the app from google-chrome (`$appid`)
- 4. Copy the `id` value assigned at the extension from google-chrome (`$extensionid`)
+   * select the folder: `$LauraKeylogger/app` to install app
+   * select the folder: `$LauraKeylogger/extension` to install extension
+ 3. Copy the `id` value assigned at the app from google-chrome (`$appID`)
+ 4. Copy the `id` value assigned at the extension from google-chrome (`$extensionID`)
  5. Open the file `$LauraKeylogger/app/appID.js` with a text editor and modify `__appID` variable with `id`'s obtained in steps 3 and 4.
- 5. Open the file `$LauraKeylogger/extension/appID.js` with a text editor and modify `__appID` variable with `id`'s obtained in steps 3 and 4.
- 6. In chrome, reload the extension and the application. 
+ 6. Open the file `$LauraKeylogger/extension/appID.js` with a text editor and modify `__appID` variable with `id`'s obtained in steps 3 and 4.
+ ``` Javascript	
+ // Applcation IDs, used for message passing
+ var __appID = {
+ 	app: "insert here $appID",
+		ext: "insert here $extensionID"
+ }
+ ```
+ 7. In chrome, reload the extension and the application. 
+
+ Configurations are in `config.js` files.
