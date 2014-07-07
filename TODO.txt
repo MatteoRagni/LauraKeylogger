@@ -1,2 +1,4 @@
-* check saving in local storage
-* implementare un messaggio di risposta nelle funzioni di connessioni
+ * implement badges on browserAction
+ * implement webBroser global events??
+ * read clicked object
+ * collect keyboard information in a single string
