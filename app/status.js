@@ -2,15 +2,11 @@
 // This variable is used by the app to understand if capturing is running or not
 var CAPTURING = false;
 
-
-
-
 // Definitions only for debugging and test
-var __debug__ = true;
 
 /* DO NOT EDIT BELOW THIS LINE */
 
-if (__debug__) {
+if (__config.__debug__) {
 
     function __print(mess) {
         console.log("[DEBUG] :: " + mess);
@@ -39,11 +35,14 @@ if (__debug__) {
             alt: false,
             shift: false,
             keyCode: "0x100"
-        }
+        },
+
+        title: "PLEASE START CAPTURING!!"
     }
 
 } else {
-    function __debug(mess){}; 
+    function __print(mess) {}; 
+    var __testing_obj = {};
 }
 
 // this function handle the capturing status (capturing status refer only to saving data in the textarea!)
@@ -60,6 +59,9 @@ function xorStatus() {
         obj.removeClass("btn-success");
         obj.addClass("btn-danger");
     }
+    // Send swithed status to the server
+    chrome.runtime.sendMessage({protocol:"status", content:CAPTURING});
+    n_StartStop(CAPTURING);
 }
 
 // Used to change the color of span object that identify modifiers
@@ -125,7 +127,7 @@ $(document).ready( function() {
     // Click function for Show and Save (showInXML)
     $("#showInXML").click(function() {
         __print("clicked event! :: #showInXML");
-        chrome.runtime.sendMessage({protocol:"show", content: "xml_show"});
+        chrome.runtime.sendMessage({protocol:"show", content: "capture_show"});
     });
 
 });

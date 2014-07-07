@@ -25,6 +25,8 @@ var __config = {
         minWidth: 600,
         minHeight: 550
     },
+
+    notificationID: "__LauraKeyloggerNotifications",
     
     // Debug option
     __debug__: true

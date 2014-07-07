@@ -273,15 +273,17 @@ function connectionMessage(msg) {
     
     // implementation of protocol "event", that must be collected in the file 
     if (msg.protocol === "event") {
-        keylog.update(msg.content);
-        keylog.consoleLog();
-        keylog.updateWindow();
+        if (CAPTURING) {
+            keylog.update(msg.content);
+            keylog.consoleLog();
+            keylog.updateWindow();
+        }
     }
 
     // implementation of protocol show
     if (msg.protocol === "show") {
         switch (msg.content) {
-            case "xml_show": // Open the output window
+            case "capture_show": // Open the output window
                 if (!(chrome.app.window.get(__config.out_window.id))) {
                    chrome.app.window.create('content.html', __config.out_window);   
                 }
@@ -299,6 +301,13 @@ function connectionMessage(msg) {
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_csv();
                 break;
         }
+    }
+
+    // Define the capturing status, enabled if true, disabled if false. 
+    // This will stop the calling of keylog update function
+    if (msg.protocol === "status") {
+        CAPTURING = msg.content;
+        __printDebug("Capturiing status set to: " + CAPTURING);
     }
     
 }

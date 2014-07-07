@@ -8,7 +8,8 @@
     "background": {
       "scripts": [
         "appid.js", 
-        "config.js", 
+        "config.js",
+        "notifications.js", 
         "storage.js", 
         "main.js"
       ]
@@ -19,7 +20,8 @@
       "unlimitedStorage", 
       {"fileSystem": ["write"] }, 
       "clipboardRead", 
-      "clipboardWrite" 
+      "clipboardWrite",
+      "notifications" 
     ],
   "icons": { 
       "16": "icons/icon16.png", 
