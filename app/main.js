@@ -153,12 +153,71 @@ var Keylogger = function() {
     this.getXML_SPSS = function() {
         
         var data = this.file.get();
-        var n = "\n";
 
-        var xml = "<spssfile>" + n + 
-                  "  <variable>" + n +
-                  "    "
+        // Header preparation
+        var xml  = "<spssfile>" + "\n" + 
+                   "  <variable>" + "\n" +
+                   "    <numeric name='epoch' decimal='0' label='Time of the event' />" + "\n" +
+                   "    <string name='localeTime' legth='64' label='Locale string for time' />" + "\n" +
+                   "    <string name='localeDate' legth='64' label='Locale string for date' />" + "\n";
 
+        if (this.title) {
+            xml += "    <string name='title' legth='2048' label='Title of the page' />" + "\n";
+        }          
+
+        if (this.mouse) {
+            xml += "    <numeric name='x' decimal='0' label='X posistion of the mouse' />" + "\n" +
+                   "    <numeric name='y' decimal='0' label='Y position of the mouse' />" + "\n" +
+                   "    <string name='type' legth='32' label='Type of mouse event' />" + "\n" + 
+                   "    <string name='button' legth='32' label='Mouse button pressed' />" + "\n";
+        }
+
+        if (this.keyboard) {
+            xml += "    <string name='keycode' legth='32' label='Keycode relative to key pressed' />" + "\n" + 
+                   "    <string name='key' legth='32' label='Key pressed' />" + "\n" + 
+                   "    <string name='combination' legth='64' label='Combination of key pressed with modifiers' />" + "\n" + 
+                   "    <numeric name='ctrl' decimal='0' label='ctrl modifier pressed' />" + "\n" +
+                   "    <numeric name='alt' decimal='0' label='alt modifier pressed' />" + "\n" +
+                   "    <numeric name='shift' decimal='0' label='shift modifier pressed' />" + "\n" +
+                   "    <numeric name='meta' decimal='0' label='meta modifier pressed' />" + "\n";
+        }
+        xml += "  </variable>" + "\n" + "\n" +
+               "  <data>" + "\n";
+
+        // Adding data
+        for (var i = 0; i < data.events.length; i++) {
+                xml += "    <row>" + "\n";
+
+                xml += "      <value>" + this.time.epoch + "</value>" + "\n" + 
+                       "      <value>" + this.time.localeTime + "</value>" + "\n" + 
+                       "      <value>" + this.time.localeDate + "</value>" + "\n";
+
+            if (this.title) {
+                xml += "      <value>" + this.title + "<value>" + "\n";
+            }
+
+            if (this.mouse) {
+                xml += "      <value>" + this.mouse.x + "<value>" + "\n" +
+                       "      <value>" + this.mouse.y + "</value>" + "\n" +
+                       "      <value>" + this.mouse.evnt + "</value>" + "\n" +
+                       "      <value>" + this.mouse.button + "</value>" + "\n"; 
+            }
+
+            if (this.keyboard) {
+                xml += "      <value>" + this.keyboard.keyCode + "<value>" + "\n" +
+                       "      <value>" + this.keyboard.key + "</value>" + "\n" +
+                       "      <value>" + this.keyboard.string + "</value>" + "\n" +
+                       "      <value>" + (this.keyboard.ctrl ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (this.keyboard.alt ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (this.keyboard.shift ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (this.keyboard.meta ? "1" : "0") + "</value>" + "\n";
+            }
+
+                xml += "    </row>" + "\n";
+        }
+
+        xml += "  </data>" + "\n" + "</spssfile>";
+        return xml;
 
     }
 
@@ -203,16 +262,16 @@ function connectionMessage(msg) {
                 break;
             case "xml_std": // write xml in output window
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML();
-            break;
+                break;
             case "xml_spss": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("XML SPSS not ready yet");
-            break;
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML_SPSS();
+                break;
             case "json": // write xml in output window
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("JSON not ready yet");
-            break;
+                break;
             case "csv": // write xml in output window
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("CSV not ready yet");
-            break;
+                break;
         }
     }
     

