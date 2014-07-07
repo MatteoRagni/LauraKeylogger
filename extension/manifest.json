@@ -11,5 +11,12 @@
   "web_accessible_resources": ["query.js"],
   "minimum_chrome_version": "31",
   "permissions": [ "*://*/" ],
+  "background": {
+    "scripts": ["appid.js", "background.js"]
+  },
+  "browser_action": {
+      "default_icon": "icons/icon19.png",
+      "default_title": "Laura KeyLogger"
+    },
   "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "64":"icons/icon64.png", "128": "icons/icon128.png" }
 }

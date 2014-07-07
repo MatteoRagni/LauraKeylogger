@@ -252,7 +252,9 @@ var Keylogger = function() {
     }
     
     this.updateWindow = function() {
-        (chrome.app.window.get(__config.opt_window.id)).contentWindow.populate(this.get());
+        if (chrome.app.window.get(__config.opt_window.id)) {
+            (chrome.app.window.get(__config.opt_window.id)).contentWindow.populate(this.get());
+        }
     }
 }
 
@@ -300,14 +302,24 @@ function connectionMessage(msg) {
             case "csv": // write xml in output window
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_csv();
                 break;
+            case "show_status":
+                if (!(chrome.app.window.get(__config.opt_window.id))) {
+                    chrome.app.window.create('status.html', __config.opt_window);
+                }
+                break;
         }
     }
 
     // Define the capturing status, enabled if true, disabled if false. 
     // This will stop the calling of keylog update function
     if (msg.protocol === "status") {
-        CAPTURING = msg.content;
-        __printDebug("Capturiing status set to: " + CAPTURING);
+        if (msg.content === "set") {
+            chrome.runtime.sendMessage({protocol: "running", content: CAPTURING});
+            __printDebug("Sent capturing status: " + CAPTURING);
+        } else {
+            CAPTURING = msg.content;
+            __printDebug("Capturing status set to: " + CAPTURING);
+        }
     }
     
 }
@@ -328,5 +340,9 @@ chrome.runtime.onMessage.addListener(function(msg) {
     connectionMessage(msg);
 });
 
-
-
+chrome.runtime.onMessageExternal.addListener(
+  function(msg, sender) {
+    if (sender.id === __appID.ext) {
+       connectionMessage(msg); 
+    }
+});

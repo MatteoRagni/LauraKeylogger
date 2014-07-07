@@ -1,5 +1,8 @@
 var __config = {
 
+    // If set to true, system will start to collect data on startup
+    default_startup: false,
+
     // App window options
     opt_window: {
         id: '__LauraKeyloggerWindow',
