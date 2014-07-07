@@ -1,5 +1,8 @@
 // ******** do not edit below this line *********
 
+// This variable decides if logging is enabled or not!
+var CAPTURING = false;
+
 // Create the page that draw actual keylogging informations
 //var documentWin = null;
 chrome.app.runtime.onLaunched.addListener(function() {
@@ -161,18 +164,18 @@ var Keylogger = function() {
                    "    <string name='localeTime' legth='64' label='Locale string for time' />" + "\n" +
                    "    <string name='localeDate' legth='64' label='Locale string for date' />" + "\n";
 
-        if (this.title) {
+        if (data.evants[0].title) {
             xml += "    <string name='title' legth='2048' label='Title of the page' />" + "\n";
         }          
 
-        if (this.mouse) {
+        if (data.evants[0].mouse) {
             xml += "    <numeric name='x' decimal='0' label='X posistion of the mouse' />" + "\n" +
                    "    <numeric name='y' decimal='0' label='Y position of the mouse' />" + "\n" +
                    "    <string name='type' legth='32' label='Type of mouse event' />" + "\n" + 
                    "    <string name='button' legth='32' label='Mouse button pressed' />" + "\n";
         }
 
-        if (this.keyboard) {
+        if (data.evants[0].keyboard) {
             xml += "    <string name='keycode' legth='32' label='Keycode relative to key pressed' />" + "\n" + 
                    "    <string name='key' legth='32' label='Key pressed' />" + "\n" + 
                    "    <string name='combination' legth='64' label='Combination of key pressed with modifiers' />" + "\n" + 
@@ -186,31 +189,32 @@ var Keylogger = function() {
 
         // Adding data
         for (var i = 0; i < data.events.length; i++) {
+                var event = data.events[i];
                 xml += "    <row>" + "\n";
 
-                xml += "      <value>" + this.time.epoch + "</value>" + "\n" + 
-                       "      <value>" + this.time.localeTime + "</value>" + "\n" + 
-                       "      <value>" + this.time.localeDate + "</value>" + "\n";
+                xml += "      <value>" + event.time.epoch + "</value>" + "\n" + 
+                       "      <value>" + event.time.localeTime + "</value>" + "\n" + 
+                       "      <value>" + event.time.localeDate + "</value>" + "\n";
 
-            if (this.title) {
-                xml += "      <value>" + this.title + "<value>" + "\n";
+            if (data.events[0].title) {
+                xml += "      <value>" + event.title + "<value>" + "\n";
             }
 
-            if (this.mouse) {
-                xml += "      <value>" + this.mouse.x + "<value>" + "\n" +
-                       "      <value>" + this.mouse.y + "</value>" + "\n" +
-                       "      <value>" + this.mouse.evnt + "</value>" + "\n" +
-                       "      <value>" + this.mouse.button + "</value>" + "\n"; 
+            if (data.events[0].mouse) {
+                xml += "      <value>" + event.mouse.x + "<value>" + "\n" +
+                       "      <value>" + event.mouse.y + "</value>" + "\n" +
+                       "      <value>" + event.mouse.evnt + "</value>" + "\n" +
+                       "      <value>" + event.mouse.button + "</value>" + "\n"; 
             }
 
-            if (this.keyboard) {
-                xml += "      <value>" + this.keyboard.keyCode + "<value>" + "\n" +
-                       "      <value>" + this.keyboard.key + "</value>" + "\n" +
-                       "      <value>" + this.keyboard.string + "</value>" + "\n" +
-                       "      <value>" + (this.keyboard.ctrl ? "1" : "0") + "</value>" + "\n" +
-                       "      <value>" + (this.keyboard.alt ? "1" : "0") + "</value>" + "\n" +
-                       "      <value>" + (this.keyboard.shift ? "1" : "0") + "</value>" + "\n" +
-                       "      <value>" + (this.keyboard.meta ? "1" : "0") + "</value>" + "\n";
+            if (data.events[0].keyboard) {
+                xml += "      <value>" + event.keyboard.keyCode + "<value>" + "\n" +
+                       "      <value>" + event.keyboard.key + "</value>" + "\n" +
+                       "      <value>" + event.keyboard.string + "</value>" + "\n" +
+                       "      <value>" + (event.keyboard.ctrl ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (event.keyboard.alt ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (event.keyboard.shift ? "1" : "0") + "</value>" + "\n" +
+                       "      <value>" + (event.keyboard.meta ? "1" : "0") + "</value>" + "\n";
             }
 
                 xml += "    </row>" + "\n";
@@ -221,8 +225,30 @@ var Keylogger = function() {
 
     }
 
-    this.get_cvs = function() {
+    this.get_csv = function() {
+        var data = this.file.get();      
 
+        // Header preparation
+        var csv = "# epoch, locale time, locale date";
+        csv += (data.events[0].mouse ? ", x, y, type, button" : "");
+        csv += (data.events[0].keyboard ? ", keyCode, key, combination, ctrl, alt, shift, meta" : "");
+        csv += (data.events[0].title ? ", title" : "");
+        csv += "\n \n";
+
+        // Data collection
+        for (var i = 0; i < data.events.length; i++) {
+            var event = data.events[i];
+            csv += event.time.epoch + "," + event.time.localeTime + "," + event.time.localeDate;
+            csv += ( event.mouse ? "," + event.mouse.x + "," + event.mouse.y + "," + event.mouse.evnt + "," + event.mouse.button : "" );
+            csv += ( event.keyboard ? "," + event.keyboard.keyCode + "," + event.keyboard.key + "," + event.keyboard.string + "," + (event.keyboard.ctrl ? "1" : "0") + "," + (event.keyboard.alt ? "1" : "0") + "," + (event.keyboard.shift ? "1" : "0") + "," + (event.keyboard.meta ? "1" : "0") : "" );
+            csv += ( event.title ? "," + event.title : "" );
+            csv += "\n";
+        }
+        return csv;
+    }
+
+    this.get_JSON = function() {
+        return "JSON Not Implemented Yet!";
     }
     
     this.updateWindow = function() {
@@ -267,10 +293,10 @@ function connectionMessage(msg) {
                 (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML_SPSS();
                 break;
             case "json": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("JSON not ready yet");
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_JSON();
                 break;
             case "csv": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.populate("CSV not ready yet");
+                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_csv();
                 break;
         }
     }
@@ -290,7 +316,6 @@ chrome.runtime.onConnectExternal.addListener(function(port) {
 });
 
 chrome.runtime.onMessage.addListener(function(msg) {
-    //__printDebug("message listener called" + JSON.stringify(msg));
     connectionMessage(msg);
 });
 

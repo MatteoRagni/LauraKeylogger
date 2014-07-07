@@ -2,7 +2,6 @@
 
 <head>
 
-	<title>LauraKeylogger - Collected Data</title>
      <link rel="shortcut icon" type="image/x-icon" href="icons/icon16.png" />
 
     <!-- Inclusion of external resources -->
@@ -28,10 +27,6 @@
 			cursor: text;
 			font-size: 12px;
 			font-family: monospace;
-			/* Avoid word wrap */
-			white-space: pre;
-			word-wrap: normal;
-			overflow-x: scroll;
 		}
 
 		.btn-toolbar {
@@ -43,7 +38,7 @@
 <body>
 	<div id="content" class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Collected Data</h3>
+            <h3 class="panel-title">Capturing Status and logging</h3>
         </div>
 	    <div class="panel-body">
 	       	<div class="btn-group">
