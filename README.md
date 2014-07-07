@@ -37,7 +37,7 @@ event : {
 
 ## Installation
 
- 1. Copy the github repo (or download zip file) in folder `$LauraKeylogger`
+ 1. Copy the github repo (or [download zip file](https://github.com/MatteoRagni/LauraKeylogger/archive/master.zip)) in folder `$LauraKeylogger`
  2. Install keylogger app and keylogger extension on google-chrome:
    * go to `chrome://extension`
    * select **Deveoper Mode**
