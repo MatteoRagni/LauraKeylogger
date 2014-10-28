@@ -1,9 +1,9 @@
 // Applcation IDs, used for message passing
 var __appID = {
 // Windows
-//    app: "opfpjfjicecfggophkmacanbphmfigja",  
-//    ext: "cciecdfdfbhkbheicoebjblaehbaifgb"
+    app: "opfpjfjicecfggophkmacanbphmfigja",  
+    ext: "cciecdfdfbhkbheicoebjblaehbaifgb"
 // Linux
-	app: "mampknplefhlhdoolfhpkfekcfpbdgjl",
-	ext: "ocolhhelbffkikhnfibhomgkkopcpinf"
+//	app: "mampknplefhlhdoolfhpkfekcfpbdgjl",
+//	ext: "ocolhhelbffkikhnfibhomgkkopcpinf"
 }

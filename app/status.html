@@ -24,29 +24,33 @@
             <h3 class="panel-title">Capturing Status and logging</h3>
         </div>
         <div class="panel-body">
-        	<div class="btn-group">
-            	<input type="button" class="btn btn-danger" value="Not Running" id="statusSwitch">
-            	<input type="button" class="btn btn-info" value="Show collected data" id="showInXML">
+            <div class="btn-group">
+                <input type="button" class="btn btn-danger" value="Not Running" id="statusSwitch">
+                <input type="button" class="btn btn-info" value="Show collected data" id="showInXML">
+                <input type="button" class="btn btn-info" value="Screen Capture" id="videoFeed">
             </div>
         </div>
         <div class="panel-heading">
             <h3 class="panel-title">Real Time capturing</h3>
         </div>
         <div class="panel-body">
-    	<table class="table table-striped" id="results-table">
-    		<!-- Time -->
-    		<tr class="cls-tr-time info"><td colspan="2">Time</td></tr>
-    		<tr class="cls-tr-time"><td>Epoch</td><td class="data" id="timeEpoch">timeEpoch</td></tr>
-    		<tr class="cls-tr-time"><td>Locale</td><td class="data" id="timeLocale">timeLocale</td></tr>
+        <table class="table table-striped" id="results-table">
+            <!-- Time -->
+            <tr class="cls-tr-time info"><td colspan="2">Time</td></tr>
+            <tr class="cls-tr-time"><td>Epoch</td><td class="data" id="timeEpoch">timeEpoch</td></tr>
+            <tr class="cls-tr-time"><td>Locale</td><td class="data" id="timeLocale">timeLocale</td></tr>
             <!-- page information -->
             <tr class="cls-tr-title info"><td colspan="2">Title</td></tr>
             <tr class="cls-tr-title"><td class="data" colspan="2" id="idTitle">idTitle</td></tr>
-    		<!-- Mouse -->
-    		<tr class="cls-tr-mouse info"><td colspan="2">Mouse</td></tr>
-    		<tr class="cls-tr-mouse"><td>X</td><td class="data" id="mouseX">mouseX</td></tr>
-    		<tr class="cls-tr-mouse"><td>Y</td><td class="data" id="mouseY">mouseY</td></tr>
-    		<tr class="cls-tr-mouse"><td>Event</td><td class="data" id="mouseEv">mouseEv</td></tr>
-    		<tr class="cls-tr-mouse"><td>Button</td><td class="data" id="mouseBtn">mouseBtn</td></tr>
+            <!-- Mouse -->
+            <tr class="cls-tr-mouse info"><td colspan="2">Mouse</td></tr>
+            <tr class="cls-tr-mouse"><td>X</td><td class="data" id="mouseX">mouseX</td></tr>
+            <tr class="cls-tr-mouse"><td>Y</td><td class="data" id="mouseY">mouseY</td></tr>
+            <tr class="cls-tr-mouse"><td>X Window</td><td class="data" id="mouseXWin">mouseXWin</td></tr>
+            <tr class="cls-tr-mouse"><td>Y Window</td><td class="data" id="mouseYWin">mouseYWin</td></tr>
+            <tr class="cls-tr-mouse"><td>Event</td><td class="data" id="mouseEv">mouseEv</td></tr>
+            <tr class="cls-tr-mouse"><td>Button</td><td class="data" id="mouseBtn">mouseBtn</td></tr>
+            <tr class="cls-tr-mouse"><td>Target</td><td class="data" id="mouseTarget">Target</td></tr>
             <!-- Keyboard -->
             <tr class="cls-tr-kbrd info"><td colspan="2">Keyboard</td></tr>
             <tr class="cls-tr-kbrd"><td>Key</td><td class="data" id="kbdKey">kbdKey</td></tr>
@@ -60,8 +64,8 @@
                 </td>
             </tr>
             <tr class="cls-tr-kbrd"><td>Combination</td><td class="data" id="kbdComb">kbdComb</td></tr>
-    	</table>
-    	</div>
+        </table>
+        </div>
     </div>
     <span class="credits">Laura Lugli, Matteo Ragni - 2014 - <a href="https://github.com/MatteoRagni/LauraKeylogger">Repo Github</a><span>
 </body>

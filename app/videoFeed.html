@@ -1,0 +1,58 @@
+<html>
+
+<head>
+
+	<title>LauraKeylogger - Video Feed</title>
+     <link rel="shortcut icon" type="image/x-icon" href="icons/icon16.png" />
+
+    <!-- Inclusion of external resources -->
+    <!-- jQuery -->
+    <script src="external/jquery-2.1.1.min.js"></script>
+    <!-- Bootstrap -->   
+    <link rel="stylesheet" href="external/bootstrap.min.css">
+    <script src="external/bootstrap.min.js"></script>
+    <!-- Whammy Javascript for exporting video -->
+    <script src="external/whammy.min.js"></script>
+
+	<style>
+		body {
+			padding: 10px;
+		}
+		video {
+			display: block;
+			border: 1px solid black;
+			border-radius: 5px;
+			margin-top:5px;
+			margin-bottom: 5px;
+			width: 640px;
+			height: 400px;
+			background: black;
+		}
+		#saveFrame {
+			display: none;
+			width: 640px;
+			height: 400px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="content" class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Video Feed</h3>
+        </div>
+	    <div class="panel-body" id="videoContainer">
+	       	<div class="btn-group">
+            	<input type="button" class="btn btn-info" value="Open Stream" id="openstream">
+            	<input type="button" class="btn btn-danger" disabled value="Record" id="recorder">
+            	<a type="button" class="btn btn-success" id="downloadVideoFeed">Download Video Feed</a>
+            </div>
+            <video autoplay id="showVideoFeed"></video>
+            <canvas id="saveFrame"></canvas>
+        </div>
+
+	</div>
+
+</body>
+<script src="videoFeed.js"></script>
+</html>

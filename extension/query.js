@@ -47,6 +47,11 @@ var __config = {
 
 // ***** do not edit below this line ****** //
 
+// Adding a prototype to the string class to read innerHTML
+String.prototype.htmlEncode = function () {
+    return String(this).replace(/\s*/g, ' ').replace(/\n/g, ' ');
+}
+
 // Debugging function. Set to false __config.__debug__ to 
 // avoid messages in console
 function __printDebug(message) {
@@ -65,10 +70,11 @@ function __printKeylog() {
         if (obj.title) { log += "Title: " + obj.title + '\n';}
         if (obj.mouse) {
             log += "Mouse:" + '\n';
-            log += '\t' + "X: " + obj.mouse.x + '\n';
-            log += '\t' + "Y:" + obj.mouse.y + '\n';
+            log += '\t' + "X: " + obj.mouse.x + ' : ' + obj.mouse.xWin + '\n';
+            log += '\t' + "Y:" + obj.mouse.y + ' : ' + obj.mouse.yWin + '\n';
             log += '\t' + "Event: " + obj.mouse.evnt + '\n';
             log += '\t' + "Button: " + obj.mouse.button + '\n';
+            log += '\t' + "Target: " + obj.mouse.target + '\n';
         }
         if (obj.keyboard) {
             log += "Keyboard:" + obj.keyboard.string + '\n';
@@ -83,10 +89,13 @@ function __printKeylog() {
 // MOUSE CLASS
 // This class handles status and event for the mouse input
 function __Mouse() {
-	this.x      = 0;
-	this.y      = 0;
-	this.button = __config.nullString;
-	this.evnt   = __config.nullString; 
+	this.x         = 0;
+	this.y         = 0;
+	this.xWin	   = 0;
+	this.yWin	   = 0;
+	this.button    = __config.nullString;
+	this.target    = __config.nullString;
+	this.evnt      = __config.nullString; 
 
 	// this function set the status of the mouse on each event
 	this.fire = function(e) {
@@ -95,9 +104,15 @@ function __Mouse() {
 		if (e.type = "mousemove") {
 			this.x = e.screenX;
 			this.y = e.screenY;
+			this.xWin = e.clientX;
+			this.yWin = e.clientY;
 		}
 
 		if (e.type === "click" || e.type === "dblclick") {
+			this.target = "[nodeName] = " + e.target.nodeName + 
+			          " :: [Value] = " + e.target.value + 
+			          " :: [HREF] = " + (e.target.href ? "NO" : e.target.href) + 
+					  " :: [TEXTCONTENT] = " + e.target.textContent.htmlEncode().substring(0,1024);
 			switch(e.button) {
 			case 0: 
 				this.button = __config.LeftMouseDef;
@@ -114,6 +129,7 @@ function __Mouse() {
 			}
 		} else {
 			this.button = __config.nullString;
+			this.target = __config.nullString;
 		}
 
 		switch(e.type) {
@@ -147,8 +163,11 @@ function __Mouse() {
 		return {
 			x: this.x,
 			y: this.y,
+			xWin: this.xWin,
+			yWin: this.yWin,
 			evnt: this.evnt,
-			button: this.button
+			button: this.button,
+			target: this.target
 		}
 	}
 }

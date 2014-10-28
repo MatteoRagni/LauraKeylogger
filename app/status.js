@@ -22,8 +22,11 @@ if (__config.__debug__) {
         mouse: {
             x: "mouse_x",
             y: "mouse_y",
+            xWin: "mouse_win_x",
+            yWin: "mouse_win_y",
             evnt: "mouse_event",
-            button: "mouse_button"
+            button: "mouse_button",
+            target: "mouse_element_target"
         },
 
         keyboard: {
@@ -66,42 +69,45 @@ function xorStatus() {
 
 // Used to change the color of span object that identify modifiers
 function modifierStatus(itemId, cond) {
-	if (cond) {
-		$(itemId).removeClass();
-		$(itemId).addClass("label label-success");
-	} else {
-		$(itemId).removeClass();
-		$(itemId).addClass("label label-info");
-	}
+    if (cond) {
+        $(itemId).removeClass();
+        $(itemId).addClass("label label-success");
+    } else {
+        $(itemId).removeClass();
+        $(itemId).addClass("label label-info");
+    }
 }
 
 // This script is used to populate objects in table. jQuery id selector used!
 function populate(obj) {
     if (CAPTURING) {
-    	// Writing time of the capture
+        // Writing time of the capture
         $("#timeEpoch").html(obj.time.epoch);
         $("#timeLocale").html(obj.time.localeTime + " - " + obj.time.localeDate);
         // Writing title of the capture or hide title rows
         if (obj.title) {
-        	$(".cls-tr-title").show();
-        	$("#idTitle").html(obj.title);
+            $(".cls-tr-title").show();
+            $("#idTitle").html(obj.title);
         } else {
-        	$(".cls-tr-title").hide();
+            $(".cls-tr-title").hide();
         }
         // Writing elements of mouse events if present
         if (obj.mouse) {
-        	$(".cls-tr-mouse").show();
-        	$("#mouseX").html(obj.mouse.x);
-        	$("#mouseY").html(obj.mouse.y);
-        	$("#mouseEv").html(obj.mouse.evnt);
-        	$("#mouseBtn").html(obj.mouse.button);
+            $(".cls-tr-mouse").show();
+            $("#mouseX").html(obj.mouse.x);
+            $("#mouseY").html(obj.mouse.y);
+            $("#mouseXWin").html(obj.mouse.xWin);
+            $("#mouseYWin").html(obj.mouse.yWin);
+            $("#mouseEv").html(obj.mouse.evnt);
+            $("#mouseBtn").html(obj.mouse.button);
+            $("#mouseTarget").html(obj.mouse.target);
         } else {
-        	$(".cls-tr-mouse").hide();
+            $(".cls-tr-mouse").hide();
         }
         if (obj.keyboard) {
-        	$(".cls-tr-kbrd").show();
-        	$("#kbdKey").html(obj.keyboard.key + " - " + obj.keyboard.keyCode);
-        	modifierStatus("#kbdCtrl", obj.keyboard.ctrl);
+            $(".cls-tr-kbrd").show();
+            $("#kbdKey").html(obj.keyboard.key + " - " + obj.keyboard.keyCode);
+            modifierStatus("#kbdCtrl", obj.keyboard.ctrl);
             modifierStatus("#kbdAlt",obj.keyboard.alt);
             modifierStatus("#kbdShift",obj.keyboard.shift);
             modifierStatus("#kbdMeta",obj.keyboard.meta);
@@ -114,6 +120,7 @@ function populate(obj) {
 
 // Setting on window opening startup status
 chrome.runtime.onMessage.addListener(function(msg) {
+    obj = $("#statusSwitch");
     if (msg.protocol === "running") {
         CAPTURING = msg.content;
         if (CAPTURING === true) {
@@ -121,9 +128,9 @@ chrome.runtime.onMessage.addListener(function(msg) {
             obj.removeClass("btn-danger");
             obj.addClass("btn-success");
         } else {
-        obj.prop("value","Not Running");
-        obj.removeClass("btn-success");
-        obj.addClass("btn-danger");
+            obj.prop("value","Not Running");
+            obj.removeClass("btn-success");
+            obj.addClass("btn-danger");
         }
     }
 });
@@ -146,6 +153,13 @@ $(document).ready( function() {
     $("#showInXML").click(function() {
         __print("clicked event! :: #showInXML");
         chrome.runtime.sendMessage({protocol:"show", content: "capture_show"});
+    });
+
+    // Click function for the screen capture elements
+    $("#videoFeed").click(function() {
+        __print("clicked event! :: #videoFeed");
+        chrome.runtime.sendMessage({protocol:"show", content: "videoFeed_show"});
+        //xorVideoFeed();
     });
 
 });

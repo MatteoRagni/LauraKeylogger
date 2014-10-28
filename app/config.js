@@ -7,13 +7,13 @@ var __config = {
     opt_window: {
         id: '__LauraKeyloggerWindow',
         bounds: {
-            width: 400,
-            height: 722,
+            width: 480,
+            height: 825,
             left: 10,
             top: 10
         },
-        minWidth: 400,
-        minHeight: 722
+        minWidth: 480,
+        minHeight: 825
     },
 
     // Output window options
@@ -27,6 +27,19 @@ var __config = {
         },
         minWidth: 600,
         minHeight: 550
+    },
+
+    // Video Feed window options
+    videoFeed_window: {
+        id: '__LauraKeyloggerVideoFeed',
+        bounds: {
+            width: 690,
+            height: 500,
+            left: 10,
+            top: 10
+        },
+        minWidth: 690,
+        minHeight: 500
     },
 
     notificationID: "__LauraKeyloggerNotifications",

@@ -21,7 +21,9 @@
       {"fileSystem": ["write"] }, 
       "clipboardRead", 
       "clipboardWrite",
-      "notifications" 
+      "notifications",
+      "desktopCapture",
+      "fullscreen" 
     ],
   "icons": { 
       "16": "icons/icon16.png", 

@@ -46,8 +46,11 @@ var Keylogger = function() {
         mouse : { <- present only if the object is not null
             x: x position of the mouse with respect to screen 
             y: y position of the mouse with respect to screen 
+            xWin: x position of the mouse with respect to window
+            yWin: y position of the mouse with respect to window
             evnt: event that was triggered
             button: eventually clicked button
+            target: clicked element reported by eventHandler
         },
         keyboard : { <- present only if is not null
             string: string that rapresents eventually pressed combination
@@ -89,8 +92,11 @@ var Keylogger = function() {
                 log += "Mouse:" + '\n';
                 log += '\t' + "X: " + this.mouse.x + '\n';
                 log += '\t' + "Y:" + this.mouse.y + '\n';
+                log += '\t' + "xWin:" + this.mouse.xWin + '\n';
+                log += '\t' + "yWin:" + this.mouse.yWin + '\n';
                 log += '\t' + "Event: " + this.mouse.evnt + '\n';
                 log += '\t' + "Button: " + this.mouse.button + '\n';
+                log += '\t' + "Target:" + this.mouse.target + '\n';
             }
             if (this.keyboard) {
                 log += "Keyboard:" + this.keyboard.string + '\n';
@@ -125,8 +131,11 @@ var Keylogger = function() {
                 xmlev += "    <mouse>" + "\n" +
                          "      <x>" + event.mouse.x + "</x>" + "\n" +
                          "      <y>" + event.mouse.y + "</y>" + "\n" +
+                         "      <xWin>" + event.mouse.xWin + "</xWin>" + "\n" +
+                         "      <yWin>" + event.mouse.yWin + "</yWin>" + "\n" +
                          "      <button>" + event.mouse.button + "</button>" + "\n" +
                          "      <type>" + event.mouse.evnt + "</type>" + "\n" +
+                         "      <target>" + event.mouse.target + "</target>" + "\n" +
                          "    </mouse>" + "\n";
             }
 
@@ -164,18 +173,21 @@ var Keylogger = function() {
                    "    <string name='localeTime' legth='64' label='Locale string for time' />" + "\n" +
                    "    <string name='localeDate' legth='64' label='Locale string for date' />" + "\n";
 
-        if (data.evants[0].title) {
+        if (data.events[0].title) {
             xml += "    <string name='title' legth='2048' label='Title of the page' />" + "\n";
         }          
 
-        if (data.evants[0].mouse) {
+        if (data.events[0].mouse) {
             xml += "    <numeric name='x' decimal='0' label='X posistion of the mouse' />" + "\n" +
                    "    <numeric name='y' decimal='0' label='Y position of the mouse' />" + "\n" +
+                   "    <numeric name='xWin' decimal='0' label='X position of the mouse in window' />" + "\n" +
+                   "    <numeric name='yWin' decimal='0' label='Y position of the mouse in window' />" + "\n" +
                    "    <string name='type' legth='32' label='Type of mouse event' />" + "\n" + 
-                   "    <string name='button' legth='32' label='Mouse button pressed' />" + "\n";
+                   "    <string name='button' legth='32' label='Mouse button pressed' />" + "\n" + 
+                   "    <string name='target' legth='2048' label='Element clicked' />" + "\n";
         }
 
-        if (data.evants[0].keyboard) {
+        if (data.events[0].keyboard) {
             xml += "    <string name='keycode' legth='32' label='Keycode relative to key pressed' />" + "\n" + 
                    "    <string name='key' legth='32' label='Key pressed' />" + "\n" + 
                    "    <string name='combination' legth='64' label='Combination of key pressed with modifiers' />" + "\n" + 
@@ -203,8 +215,11 @@ var Keylogger = function() {
             if (data.events[0].mouse) {
                 xml += "      <value>" + event.mouse.x + "<value>" + "\n" +
                        "      <value>" + event.mouse.y + "</value>" + "\n" +
+                       "      <value>" + event.mouse.xWin + "</value>" + "\n" +
+                       "      <value>" + event.mouse.yWin + "</value>" + "\n" +
                        "      <value>" + event.mouse.evnt + "</value>" + "\n" +
-                       "      <value>" + event.mouse.button + "</value>" + "\n"; 
+                       "      <value>" + event.mouse.button + "</value>" + "\n" +
+                       "      <value>" + event.mouse.target + "</value>" + "\n";
             }
 
             if (data.events[0].keyboard) {
@@ -230,7 +245,7 @@ var Keylogger = function() {
 
         // Header preparation
         var csv = "# epoch, locale time, locale date";
-        csv += (data.events[0].mouse ? ", x, y, type, button" : "");
+        csv += (data.events[0].mouse ? ", x, y, xWin, yWin, type, button, target" : "");
         csv += (data.events[0].keyboard ? ", keyCode, key, combination, ctrl, alt, shift, meta" : "");
         csv += (data.events[0].title ? ", title" : "");
         csv += "\n \n";
@@ -239,7 +254,7 @@ var Keylogger = function() {
         for (var i = 0; i < data.events.length; i++) {
             var event = data.events[i];
             csv += event.time.epoch + "," + event.time.localeTime + "," + event.time.localeDate;
-            csv += ( event.mouse ? "," + event.mouse.x + "," + event.mouse.y + "," + event.mouse.evnt + "," + event.mouse.button : "" );
+            csv += ( event.mouse ? "," + event.mouse.x + "," + event.mouse.y + "," + event.mouse.xWin + "," + event.mouse.yWin + "," + event.mouse.evnt + "," + event.mouse.button + "," + event.mouse.target : "" );
             csv += ( event.keyboard ? "," + event.keyboard.keyCode + "," + event.keyboard.key + "," + event.keyboard.string + "," + (event.keyboard.ctrl ? "1" : "0") + "," + (event.keyboard.alt ? "1" : "0") + "," + (event.keyboard.shift ? "1" : "0") + "," + (event.keyboard.meta ? "1" : "0") : "" );
             csv += ( event.title ? "," + event.title : "" );
             csv += "\n";
@@ -288,6 +303,11 @@ function connectionMessage(msg) {
             case "capture_show": // Open the output window
                 if (!(chrome.app.window.get(__config.out_window.id))) {
                    chrome.app.window.create('content.html', __config.out_window);   
+                }
+                break;
+            case "videoFeed_show": // Open video feed window
+                if (!(chrome.app.window.get(__config.out_window.id))) {
+                   chrome.app.window.create('videoFeed.html', __config.videoFeed_window);   
                 }
                 break;
             case "xml_std": // write xml in output window
