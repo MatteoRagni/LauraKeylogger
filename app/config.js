@@ -20,12 +20,12 @@ var __config = {
     out_window: {
         id: '__LauraKeyloggerOutput',
         bounds: {
-            width: 600,
+            width: 900,
             height: 550,
             left: 10,
             top: 10
         },
-        minWidth: 600,
+        minWidth: 900,
         minHeight: 550
     },
 

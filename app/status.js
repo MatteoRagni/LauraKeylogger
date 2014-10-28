@@ -152,13 +152,13 @@ $(document).ready( function() {
     // Click function for Show and Save (showInXML)
     $("#showInXML").click(function() {
         __print("clicked event! :: #showInXML");
-        chrome.runtime.sendMessage({protocol:"show", content: "capture_show"});
+        chrome.runtime.sendMessage({protocol:"window", content: "capture_show"});
     });
 
     // Click function for the screen capture elements
     $("#videoFeed").click(function() {
         __print("clicked event! :: #videoFeed");
-        chrome.runtime.sendMessage({protocol:"show", content: "videoFeed_show"});
+        chrome.runtime.sendMessage({protocol:"window", content: "videoFeed_show"});
         //xorVideoFeed();
     });
 

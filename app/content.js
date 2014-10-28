@@ -37,5 +37,17 @@ $(document).ready( function() {
 		n_CopyClipboard();
 	});
 
+	// Enable Clear button
+	$('#clear0').click( function() {
+		$('#clear1').prop('disabled',false);
+		setTimeout( function() { $('#clear1').prop('disabled',true); }, 2000);
+	});
+
+	// Clearing DATA
+	$('#clear0').click( function() {
+		$('#clear1').prop('disabled',true);
+		$('#data_container').innerHTML = "All data have been cleared!";
+		chrome.runtime.sendMessage({protocol:"clear_data", content:"clear_confirmed"});
+	});	
 
 });

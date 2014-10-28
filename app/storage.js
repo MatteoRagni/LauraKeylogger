@@ -39,4 +39,8 @@ var __File = function(name) {
 	this.get = function() {
 		return chrome.storage.local[this.name];
 	}
+
+	this.clear = function() {
+		chrome.storage.local[this.name] = { events: [] };
+	}
 }

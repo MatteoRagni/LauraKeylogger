@@ -282,7 +282,7 @@ function __printDebug(message) {
 // Function that will be executed only when external message is 
 // incoming from authorized external extension
 function connectionMessage(msg) {
-    
+
     // implementation of protocol "log" messages
     if (msg.protocol === "log") {
         console.log(msg.content);
@@ -297,36 +297,58 @@ function connectionMessage(msg) {
         }
     }
 
-    // implementation of protocol show
-    if (msg.protocol === "show") {
+    // implementation of open windows messages
+    if (msg.protocol === "window") {
         switch (msg.content) {
-            case "capture_show": // Open the output window
+        case "capture_show": // Open the output window
                 if (!(chrome.app.window.get(__config.out_window.id))) {
                    chrome.app.window.create('content.html', __config.out_window);   
                 }
                 break;
-            case "videoFeed_show": // Open video feed window
-                if (!(chrome.app.window.get(__config.out_window.id))) {
-                   chrome.app.window.create('videoFeed.html', __config.videoFeed_window);   
-                }
-                break;
+        case "videoFeed_show": // Open video feed window
+            if (!(chrome.app.window.get(__config.out_window.id))) {
+               chrome.app.window.create('videoFeed.html', __config.videoFeed_window);   
+            }
+            break;
+        case "show_status":
+            if (!(chrome.app.window.get(__config.opt_window.id))) {
+                chrome.app.window.create('status.html', __config.opt_window);
+            }
+            break;
+        }
+    }
+
+    // implementation of protocol show
+    if (msg.protocol === "show") {
+        var dataExport = { ext: "", data: "" };
+        switch (msg.content) {
             case "xml_std": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML();
+                dataExport.data = keylog.getXML();
+                dataExport.ext = "xml";               
                 break;
             case "xml_spss": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.getXML_SPSS();
+                dataExport.data = keylog.getSPSS();
+                dataExport.ext = "xml";
+                
                 break;
             case "json": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_JSON();
+                dataExport.data = keylog.getJSON();
+                dataExport.ext = "json";
                 break;
             case "csv": // write xml in output window
-                (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = keylog.get_csv();
+                dataExport.data = keylog.get_csv();
+                dataExport.ext = "csv";
                 break;
-            case "show_status":
-                if (!(chrome.app.window.get(__config.opt_window.id))) {
-                    chrome.app.window.create('status.html', __config.opt_window);
-                }
-                break;
+        }
+        (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("data_container").innerHTML = dataExport.data;
+        (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("download").setAttribute('download', 'experiment_data.' + dataExport.ext);
+        (chrome.app.window.get(__config.out_window.id)).contentWindow.document.getElementById("download").setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(dataExport.data));
+    }
+
+    if (msg.protocol === "clear_data") {
+        if (msg_content === "clear_confirmed") {
+            __printDebug("Request for data clearing! Request Accepted! DATA CLEARED");
+            keylog.file.clear();
         }
     }
 
