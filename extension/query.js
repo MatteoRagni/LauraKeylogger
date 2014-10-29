@@ -49,7 +49,7 @@ var __config = {
 
 // Adding a prototype to the string class to read innerHTML
 String.prototype.htmlEncode = function () {
-    return String(this).replace(/\s*/g, ' ').replace(/\n/g, ' ');
+    return String(this).replace(/\s/g, ' ').replace(/\n/g, ' ');
 }
 
 // Debugging function. Set to false __config.__debug__ to 
@@ -104,8 +104,8 @@ function __Mouse() {
 		if (e.type = "mousemove") {
 			this.x = e.screenX;
 			this.y = e.screenY;
-			this.xWin = e.clientX;
-			this.yWin = e.clientY;
+			this.xWin = e.clientX + window.pageXOffset;
+			this.yWin = e.clientY + window.pageYOffset;
 		}
 
 		if (e.type === "click" || e.type === "dblclick") {

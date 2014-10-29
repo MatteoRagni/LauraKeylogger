@@ -327,12 +327,12 @@ function connectionMessage(msg) {
                 dataExport.ext = "xml";               
                 break;
             case "xml_spss": // write xml in output window
-                dataExport.data = keylog.getSPSS();
+                dataExport.data = keylog.getXML_SPSS();
                 dataExport.ext = "xml";
                 
                 break;
             case "json": // write xml in output window
-                dataExport.data = keylog.getJSON();
+                dataExport.data = keylog.get_JSON();
                 dataExport.ext = "json";
                 break;
             case "csv": // write xml in output window
@@ -346,7 +346,7 @@ function connectionMessage(msg) {
     }
 
     if (msg.protocol === "clear_data") {
-        if (msg_content === "clear_confirmed") {
+        if (msg.content === "clear_confirmed") {
             __printDebug("Request for data clearing! Request Accepted! DATA CLEARED");
             keylog.file.clear();
         }

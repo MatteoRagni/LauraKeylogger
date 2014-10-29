@@ -44,10 +44,11 @@ $(document).ready( function() {
 	});
 
 	// Clearing DATA
-	$('#clear0').click( function() {
+	$('#clear1').click( function() {
 		$('#clear1').prop('disabled',true);
-		$('#data_container').innerHTML = "All data have been cleared!";
+		$('#data_container')[0].innerHTML = "All data have been cleared!";
 		chrome.runtime.sendMessage({protocol:"clear_data", content:"clear_confirmed"});
 	});	
+
 
 });
