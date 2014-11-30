@@ -61,7 +61,12 @@ var Keylogger = function() {
             shift: true if key was pressed
             meta: true if key was pressed
             keyCode: hex value that represents key pressed
-        }
+        },
+        tabs : {
+            title: ordered list of (shortened) title of each tab
+            url: ordered list url (shortened) pinpointed by each tab
+            active: status of the tab (true if it is active)
+        } 
     }
     */
     this.get = function() {

