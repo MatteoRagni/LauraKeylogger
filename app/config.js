@@ -21,7 +21,7 @@ var __config = {
         id: '__LauraKeyloggerOutput',
         bounds: {
             width: 900,
-            height: 550,
+            height: 1000,
             left: 10,
             top: 10
         },

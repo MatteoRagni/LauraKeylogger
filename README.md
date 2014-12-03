@@ -34,9 +34,37 @@ event : {
 		shift : track if shift modifier is pressed
 		meta : track if meta modifier is pressed
 	}
+    windows : [ <- this is a list of window object
+        {
+            id: unique id to identify the window
+            focused: it is true if the windows is focused
+            geometry: {
+                top: distance between top border to top of the screen
+                left: distance between left border to left of the screen
+                width: width of the window
+                heigth: heigth of the window
+            }
+            incognito: this is true if the window is in incognito mode
+            type: type of the window, if normal or popup
+            alwaysOnTop: set to true if the window is on top
+            tabs: [
+                {
+                    index: unique ordered number for the tab (from left to right),
+                    active: if the tab is the active in his own window
+                    pinned: if the tab is pinned
+                    hightlighted: if the tab is highlighted
+                    title: shortened to 25 char title of the tab
+                    url: shortened to 25 char url of the tab
+                    status: status of the tab, if loading the page or if completed
+                }
+            ]
+        } 
+    ]
 }
 
 ```
+
+Until now, only **Standar XML** supports windows output!
 
 ## Installation
 

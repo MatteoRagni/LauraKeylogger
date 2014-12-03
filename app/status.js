@@ -1,6 +1,7 @@
 // Status.js
 // This variable is used by the app to understand if capturing is running or not
 var CAPTURING = __config.default_startup;
+var windowsList = new __windowListGenerator()
 
 // Definitions only for debugging and test
 
@@ -39,6 +40,7 @@ if (__config.__debug__) {
             shift: false,
             keyCode: "0x100"
         },
+        windows : [ ],
 
         title: "PLEASE START CAPTURING!!"
     }
@@ -115,6 +117,9 @@ function populate(obj) {
         } else {
             $(".cls-tr-kbrd").hide();
         }
+        if (obj.windows) {
+            windowsList.parser(obj);
+        }
     }
 }
 
@@ -161,6 +166,8 @@ $(document).ready( function() {
         chrome.runtime.sendMessage({protocol:"window", content: "videoFeed_show"});
         //xorVideoFeed();
     });
+
+    windowsList.element = $('#windows-status-container');
 
 });
 
