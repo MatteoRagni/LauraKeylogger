@@ -47,13 +47,13 @@ var __Windows = function() {
 						var __url = "";
 						// Shortens the title if greater than 25 char
 						if (windows[i].tabs[j].title.length > 25) {
-							__title = windows[i].tabs[j].title.split(0,22) + "...";
+							__title = windows[i].tabs[j].title.slice(0,22) + "...";
 						} else {
 							__title = windows[i].tabs[j].title;
 						}
 						// Shortens the url if greater than 25 char
 						if (windows[i].tabs[j].url.length > 25) {
-							__url = windows[i].tabs[j].url.split(0,22) + "...";
+							__url = windows[i].tabs[j].url.slice(0,22) + "...";
 						} else {
 							__url = windows[i].tabs[j].url;
 						}
