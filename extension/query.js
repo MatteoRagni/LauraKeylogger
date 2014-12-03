@@ -42,7 +42,7 @@ var __config = {
 	dispatchID: "__LauraKeyLoggerExtension",
 	
 	// Defines the debug routine
-	__debug__: true
+	__debug__: false
 }
 
 // ***** do not edit below this line ****** //

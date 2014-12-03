@@ -19,17 +19,19 @@ var Keylogger = function() {
     this.title = null;
     this.mouse = null;
     this.keyboard = null;
+    this.windows = null;
     
     // Select if log in console or not
     this.loginconsole = false;
 
     // This function is called with the content of the message from the extension
-    this.update = function(content) {
+    this.update = function(content, windows) {
         this.time = { epoch: content.time, obj: new Date(content.time) };
         if (content.config.opt_title) { this.title = content.title; } else { this.title = null; }
         if (content.config.opt_mouse) { this.mouse = content.mouse; } else { this.mouse = null; }
         if (content.config.opt_keyboard) { this.keyboard = content.keyboard; } else { this.keyboard = null; }
 
+        if (windows) { this.windows = windows; } else { this.windows = null; }
         // Add an element to the file
         this.file.push(this.get());
     };
@@ -62,11 +64,32 @@ var Keylogger = function() {
             meta: true if key was pressed
             keyCode: hex value that represents key pressed
         },
-        tabs : {
-            title: ordered list of (shortened) title of each tab
-            url: ordered list url (shortened) pinpointed by each tab
-            active: status of the tab (true if it is active)
-        } 
+        windows : [ <- this is a list of window object
+            {
+                id: unique id to identify the window
+                focused: it is true if the windows is focused
+                geometry: {
+                    top: distance between top border to top of the screen
+                    left: distance between left border to left of the screen
+                    width: width of the window
+                    heigth: heigth of the window
+                }
+                incognito: this is true if the window is in incognito mode
+                type: type of the window, if normal or popup
+                alwaysOnTop: set to true if the window is on top
+                tabs: [
+                    {
+                        index: unique ordered number for the tab (from left to right),
+                        active: if the tab is the active in his own window
+                        pinned: if the tab is pinned
+                        hightlighted: if the tab is highlighted
+                        title: shortened to 25 char title of the tab
+                        url: shortened to 25 char url of the tab
+                        status: status of the tab, if loading the page or if completed
+                    }
+                ]
+            } 
+        ]
     }
     */
     this.get = function() {
@@ -79,6 +102,7 @@ var Keylogger = function() {
         if (this.mouse) { ret.mouse = this.mouse };
         if (this.keyboard) { ret.keyboard = this.keyboard };
         if (this.title) { ret.title = this.title };
+        if (this.windows) { ret.windows = this.windows };
         return ret;
     };
     
@@ -105,6 +129,12 @@ var Keylogger = function() {
             }
             if (this.keyboard) {
                 log += "Keyboard:" + this.keyboard.string + '\n';
+            }
+            if (this.windows) {
+                log += "Windows: (" + this.windows.length + ")" + '\n';
+                for (i = 0; i < this.windows.length; i++) {
+                    log += '\t' + "Win: " + i + " has " + this.windows.tabs.length  + " tabs \n"; 
+                }
             }
             console.log(log);
         }
@@ -156,6 +186,42 @@ var Keylogger = function() {
                          "      <combination>" + event.keyboard.string + "</combination>" + "\n" +
                          "    </keyboard>" + "\n";
 
+            }
+
+            // Windows events
+            if (event.windows) {
+                xmlev += "    <windows>" + "\n";
+
+                for (var j = 0; j < event.windows.length; j++) {
+                    xmlev += "      <window>" + "\n" +
+                             "        <id>" + event.windows[j].id + "</id>" + "\n" + 
+                             "        <focused>" + event.windows[j].focused + "</focused>" + "\n" + 
+                             "        <incognito>" + event.windows[j].incognito + "</incognito>" + "\n" + 
+                             "        <type>" + event.windows[j].type + "</type>" + "\n" + 
+                             "        <alwaysOnTop>" + event.windows[j].alwaysOnTop + "</alwaysOnTop>" + "\n" + 
+                             "        <geometry>" + "\n" +
+                             "          <top>" + event.windows[j].geometry.top + "</top>" + "\n" + 
+                             "          <left>" + event.windows[j].geometry.left + "</left>" + "\n" + 
+                             "          <width>" + event.windows[j].geometry.width + "</width>" + "\n" + 
+                             "          <height>" + event.windows[j].geometry.height + "</height>" + "\n" + 
+                             "        </geometry>" + "\n" +
+                             "        <tabs>" + "\n";
+                    for (var k = 0; k < event.windows[j].tabs.length; k++) {
+                        xmlev += "          <tab>" + "\n" + 
+                                 "            <index>" + event.windows[j].tabs[k].index + "</index>" + "\n" + 
+                                 "            <title>" + event.windows[j].tabs[k].title + "</title>" + "\n" + 
+                                 "            <url>" + event.windows[j].tabs[k].url + "</url>" + "\n" + 
+                                 "            <active>" + event.windows[j].tabs[k].active + "</active>" + "\n" + 
+                                 "            <pinned>" + event.windows[j].tabs[k].pinned + "</pinned>" + "\n" + 
+                                 "            <highlighted>" + event.windows[j].tabs[k].highlighted + "</highlighted>" + "\n" + 
+                                 "            <status>" + event.windows[j].tabs[k].status + "</status>" + "\n"                     
+                                 "          </tab>" + "\n";
+                    }             
+                    xmlev += "        </tabs>" + "\n" +
+                             "      <window>" + "\n";
+                }
+
+                xmlev += "    </windows>" + "\n";
             }
             xmlev += "  </event>" + "\n";
 
@@ -296,7 +362,10 @@ function connectionMessage(msg) {
     // implementation of protocol "event", that must be collected in the file 
     if (msg.protocol === "event") {
         if (CAPTURING) {
-            keylog.update(msg.content);
+            //
+            console.log(msg);
+            //
+            keylog.update(msg.content.keylog, msg.content.windows);
             keylog.consoleLog();
             keylog.updateWindow();
         }
@@ -368,7 +437,6 @@ function connectionMessage(msg) {
             __printDebug("Capturing status set to: " + CAPTURING);
         }
     }
-    
 }
 
 // ****** MAIN *******

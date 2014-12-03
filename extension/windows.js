@@ -28,19 +28,12 @@ windows = {
 
 */
 
-var TEST = function() {
-	this.list = [];
-	this.refresh = function() {
-		this.list.push(1);
-	}
-}
-
 var __Windows = function() {
 
 	this.winlist = [];
 
 	// This function refreshes the status of the windows structure that we use
-	this.refresh = function() {
+	this.exec = function(keylogin) {
 		var __winlist = [];
 
 		chrome.windows.getAll({populate: true}, function(windows) {
@@ -66,39 +59,35 @@ var __Windows = function() {
 						}
 
 						__tablist.push({
-							index       : windows[i].tabs[j].index,
-							active      : windows[i].tabs[j].active,
-							pinned      : windows[i].tabs[j].pinned,
-							highlighted : windows[i].tabs[j].highlighted,
-							title       : __title,
-							url         : __url,
-							status		:  windows[i].tabs[j].status
+							index       : windows[i].tabs[j].index.toString(),
+							active      : (windows[i].tabs[j].active ? true : false),
+							pinned      : (windows[i].tabs[j].pinned ? true : false), 
+							highlighted : (windows[i].tabs[j].highlighted ? true : false),
+							title       : __title.toString(),
+							url         : __url.toString(),
+							status		:  windows[i].tabs[j].status.toString()
 						});
 					}
 
 					// Add elements to the winlist
 					__winlist.push({
-						id          : windows[i].id,
-						focused     : windows[i].focused,
-						geometry    : { top : windows[i].left, left : windows[i].left, width : windows[i].width, height : windows[i].height },
-						incognito   : windows[i].incognito,
-						type        : windows[i].type,
-						alwaysOnTop : windows[i].alwaysOnTop,
+						id          : windows[i].id.toString(),
+						focused     : (windows[i].focused ? true : false),
+						geometry    : { top : windows[i].left.toString(), left : windows[i].left.toString(), width : windows[i].width.toString(), height : windows[i].height.toString() },
+						incognito   : (windows[i].incognito ? true : false),
+						type        : windows[i].type.toString(),
+						alwaysOnTop : (windows[i].alwaysOnTop ? true : false),
 						tabs        : __tablist
 					});
 				}
 			}
-
+			connectExternalApp("event");
+        	console.log({ "keylog": keylogin, "windows": __winlist});
+	        port.postMessage({
+	            protocol: "event",
+	            content: { "keylog": keylogin, "windows": __winlist}
+	        });
 		});
-		
-		this.winlist = __winlist;
+		this.winlist =  __winlist;		
 	};
-
-	this.get = function() {
-		this.refresh();
-		return this.winlist;
-	} 
-
-	// Get all the values on creation
-	this.refresh();
 }

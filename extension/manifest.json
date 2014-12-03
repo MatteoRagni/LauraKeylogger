@@ -10,7 +10,7 @@
   }],
   "web_accessible_resources": ["query.js"],
   "minimum_chrome_version": "31",
-  "permissions": [ "*://*/", "tabs" ],
+  "permissions": [ "*://*/", "tabs", "storage" ],
   "background": {
     "scripts": ["appid.js", "config.js", "windows.js", "background.js"]
   },

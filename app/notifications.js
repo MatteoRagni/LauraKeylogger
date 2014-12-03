@@ -31,3 +31,12 @@ function n_CopyClipboard() {
 	content.contextMessage = (new Date()).toLocaleString();
 	chrome.notifications.create(__config.notificationID + "-" + Date.now(), content, function() {n_callback();});
 }
+
+// Notification the fact that actual version of the program do not export the windows stats
+function n_notImplemented() {
+	var content = n_tmpl;
+	content.iconUrl = "icons/warning.png";
+	content.message = "This version will NOT export the windows statistics!"
+	content.contextMessage = (new Date()).toLocaleString();
+	chrome.notifications.create(__config.notificationID + "-" + Date.now(), content, function() {n_callback();});
+}

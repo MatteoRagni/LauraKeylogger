@@ -18,16 +18,19 @@ $(document).ready( function() {
 	$("#spss-xml").click( function() {
 		dataElaboration();
 		chrome.runtime.sendMessage({protocol:"show", content:"xml_spss"});
+		n_notImplemented();
 	});
 	// function to get a JSON version of colected data
 	$("#json").click( function() {
 		dataElaboration();
 		chrome.runtime.sendMessage({protocol:"show", content:"json"});
+		n_notImplemented();
 	});
 	// function to collected csv file
 	$("#csv").click( function() {
 		dataElaboration();
 		chrome.runtime.sendMessage({protocol:"show", content:"csv"});
+		n_notImplemented();
 	});
 
 	// Copy to clipboard data
