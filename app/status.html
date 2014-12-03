@@ -35,6 +35,8 @@
             <h3 class="panel-title">Real Time capturing</h3>
         </div>
         <div class="panel-body">
+        <div class="row">
+        <div class="col-md-6">
         <table class="table table-striped" id="results-table">
             <!-- Time -->
             <tr class="cls-tr-time info"><td colspan="2">Time</td></tr>
@@ -65,9 +67,15 @@
                 </td>
             </tr>
             <tr class="cls-tr-kbrd"><td>Combination</td><td class="data" id="kbdComb">kbdComb</td></tr>
-            <tr class="windows-status info"><td colspan="2">Windows status</td></tr>
-            <tr class="windows-status"><td colspan="2" id="windows-status-container"></td></tr>
         </table>
+        </div>
+        <div class="col-md-6">
+        <table class="table table-striped">
+            <tr class="windows-status info"><td>Windows status</td></tr>
+            <tr class="windows-status"><td id="windows-status-container"></td></tr>
+        </table>
+        </div>
+        </div> <!--end of row div-->
         </div>
     </div>
     <span class="credits">Laura Lugli, Matteo Ragni - 2014 - <a href="https://github.com/MatteoRagni/LauraKeylogger">Repo Github</a><span>

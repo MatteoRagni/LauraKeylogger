@@ -7,12 +7,12 @@ var __config = {
     opt_window: {
         id: '__LauraKeyloggerWindow',
         bounds: {
-            width: 480,
+            width: 1350,
             height: 825,
             left: 10,
             top: 10
         },
-        minWidth: 480,
+        minWidth: 1350,
         minHeight: 825
     },
 
