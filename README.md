@@ -91,3 +91,14 @@ Until now, only **Standar XML** supports windows output!
  Configurations are in `config.js` files.
 
 **A screen recorder is included in the application using [whammy.js](https://github.com/antimatter15/whammy), but the recorded quality is not high enough for the space required for a recording**
+
+## Disclaimer
+
+If you intend to use this code for your research, please cite the original authors!
+
+```
+Lugli, L., Ragni, M., Piccardi, L., Nori, R.
+Hypermedia navigation: Differences between spatial cognitive styles
+(2017) Computers in Human Behavior, 66, pp. 191-200. Cited 2 times.
+DOI: 10.1016/j.chb.2016.09.038
+```
